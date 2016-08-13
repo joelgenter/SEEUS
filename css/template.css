@@ -117,13 +117,13 @@ input[type=submit] {
     padding: 16px 32px;
     cursor: pointer;
 }
-#iframeContent {
+#contentContainer {
     position: absolute;
     left: 200px;
     width: 850px;
     height: 600px;
 }
-#iframeMenu {
+#menuContainer {
     position:absolute;
     bottom:10px;
     height: 230px;
