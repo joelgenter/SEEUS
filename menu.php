@@ -96,7 +96,7 @@
     iframeContent = parent.iframeContent;
     iframeMenu = parent.iframeMenu;
     function menuHome() {
-        iframeContent.src = "http://localhost/seeus/iframe/index.php";
+        iframeContent.src = "http://localhost/seeus/iframe/home.php";
     }
     function menuLogin() {
         iframeContent.src = "http://localhost/seeus/iframe/login.php";
@@ -127,7 +127,7 @@
         serverRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         serverRequest.onreadystatechange = function() {
                 if (serverRequest.readyState == 4) {
-                    iframeContent.src = "http://localhost/seeus/iframe/index.php";
+                    iframeContent.src = "http://localhost/seeus/iframe/home.php";
                 }
         }
         serverRequest.send("");

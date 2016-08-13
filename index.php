@@ -1,67 +1,39 @@
-<?php  
-    require '/database/connection.php';
-    session_start();
-    $escortsRemaining = -1; //If it's -1, then the user isn't logged in
-    if (isset($_SESSION['eid'])) 
-        $escortsRemaining = $con->query("SELECT Status FROM escorts WHERE Status < 2")->num_rows;
-?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/content.css">
-    <script>
-        parent.iframeMenu.contentWindow.changeMenu(
-            "<?php 
-                if (isset($_SESSION['eid']))
-                    echo $_SESSION['eid'];
-            ?>");
-            
-        var pageContent = "";
-        var escortsRemaining = <?php echo $escortsRemaining ?>;
-        if (escortsRemaining == -1)
-            pageContent = 
-                "<div id=\"subMenuDiv\">" + 
-                    "<button onclick=\"location.href='login.php'\" class=\"homeButton\">Login</button>" +
-                    "<button onclick=\"location.href='register.php'\" class=\"homeButton\">Register</button>" +
-                "</div>";
-        else 
-            pageContent = 
-                ""
-        
-    </script>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="css/template.css">
 </head>
-<body>
-<div id="pageTitle">Home</div>
-<div id="focusDiv">
-    Welcome to SEEUS 
-    <div id="subMenuDiv">
-        <script> //document.write(pageContent); </script>
-        
-        <button onclick="location.href='escorts/request.php'" class="homeButton">Request Escort</button>
-        <button onclick="location.href='escorts/user.php'" class="homeButton">My Escorts</button>
+<body onblur="pauseVideo()" onfocus="playVideo()">
+<div id="videoContainer"> 
+    <video id="video" preload autoplay loop>
+        <source src="media/compressed_shorter_video.mp4" type="video/mp4">
+    </video>
+</div>
+<div id="centerPane">
+    <div id="leftPane">
+        <img id="seeusLogo" src="media/seeus_logo_transparent.png">
+        <iframe id="iframeMenu" src="menu.php" marginwidth="0" 
+            marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe>
     </div>
-    
-    
-    <?php 
-        // if (!isset($_SESSION['eid'])) {
-        //     echo "<p>Welcome guest</p>";
-        // }
-        // elseif ($_SESSION['eid'] == 1 | $_SESSION['eid'] == 2) {
-        //     echo "Welcome supervisor";
-        // }
-        // else {
-        //     echo "Welcome user";
-        // }
-    ?>
-
-</div> <!--focusDiv-->
+    <iframe id="iframeContent" src="http://localhost/seeus/iframe/escorts/archive.php" 
+        marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" 
+        scrolling="no"></iframe>
+    <div id="rightBorder"></div> <!--I should check to see if I can just add a border to the right side of '#centerPane'-->
+</div>
+<!---------------------------------Javascript--------------------------------->
+<script>  
+    var iframeMenu = document.getElementById('iframeMenu');
+    var iframeContent = document.getElementById('iframeContent');
+    //In <body> there's a pointer to these functions
+    // var video = document.getElementById("video");
+    // function pauseVideo() {
+    //     video.pause();
+    // }
+    // function playVideo() {
+    //     video.play();
+    // }
+</script>
 </body>
 </html>
-
-<!--TO DO LIST
-
-Restrict how many escorts they can request
-Restrict requesting escorts when offline
-Email validation
--->
-    
