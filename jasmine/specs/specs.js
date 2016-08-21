@@ -20,6 +20,10 @@ describe("changeContent() should load content for", function() {
         }
     };
 
+    beforeEach(function(){
+        $contentContainer.empty();
+    });
+    
     describe('pages in the navigation object', function() {
         beforeEach(function(done) {
             $contentContainer.on("DOMSubtreeModified", function() {
@@ -48,14 +52,16 @@ describe("changeContent() should load content for", function() {
 
     describe('pages with a wrong url in the navigation object', function() {
         beforeEach(function(done) {
-            changeContent($contentContainer, navigationObject, 'pageWithWrongURL');
             $contentContainer.on("DOMSubtreeModified", function() {
+                console.log('the event is called');
                 if ($contentContainer.text() != '') done();
             });
+            changeContent($contentContainer, navigationObject, 'pageWithWrongURL');
         });
 
         it('', function() {
             expect($contentContainer.text()).toEqual('Page not found');
         });  
     });
+
 });
