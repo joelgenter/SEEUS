@@ -3,6 +3,7 @@ describe("changeContent() should load content for", function() {
 
     var navigationObject = {
         existingPage: {
+            displayName: 'Existing Page',
             url: 'specs/ajax_files/existing_page.html',
             displayFor: {
                 authoritarian: true,
@@ -11,6 +12,7 @@ describe("changeContent() should load content for", function() {
             }
         },
         pageWithWrongURL: {
+            displayName: 'Page with Wrong URL',
             url: 'wrongURL',
             displayFor: {
                 authoritarian: true,
