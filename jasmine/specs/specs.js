@@ -78,15 +78,6 @@ describe('changeMenu() should', function() {
     var $contentContainer = setFixtures('');
 
     var navigationObject = {
-        pageWithWrongURL: {
-            displayName: 'Page with Wrong URL',
-            url: 'wrongURL',
-            displayFor: {
-                authoritarian: true,
-                user: true,
-                guest: true
-            }
-        },
         pageForGuests: {
             displayName: 'Guest Page',
             url: 'specs/ajax_files/guest_page.html',
@@ -123,7 +114,7 @@ describe('changeMenu() should', function() {
         $contentContainer.empty();
     });
 
-    describe('load guest menu items for "guest" user type', function() {
+    describe('load only guest menu items for "guest" user type', function() {
         //call changeMenu() with the guest user type
         beforeEach(function(done) {
             userType = 'guest';
@@ -144,10 +135,11 @@ describe('changeMenu() should', function() {
         it('', function() {
             expect($contentContainer.text()).toBe('guest_page is present');
             expect($menuContainer.html()).toContain('<li>Guest Page</li>');
+            expect($menuContainer.children().length).toBe(1);
         }); 
     });
 
-    describe('load user menu items for "user" user type', function() {
+    describe('load only user menu items for "user" user type', function() {
         //call changeMenu() with the user user type
         beforeEach(function(done) {
             userType = 'user';
@@ -168,10 +160,11 @@ describe('changeMenu() should', function() {
         it('', function() {
             expect($contentContainer.text()).toBe('user_page is present');
             expect($menuContainer.html()).toContain('<li>User Page</li>');
+            expect($menuContainer.children().length).toBe(1);
         }); 
     });
     
-    describe('load authoritarian menu items for "authoritarian" user type', function() {
+    describe('load only authoritarian menu items for "authoritarian" user type', function() {
         //call changeMenu() with the authoritarian user type
         beforeEach(function(done) {
             userType = 'authoritarian';
@@ -192,10 +185,11 @@ describe('changeMenu() should', function() {
         it('', function() {
             expect($contentContainer.text()).toBe('authoritarian_page is present');
             expect($menuContainer.html()).toContain('<li>Authoritarian Page</li>');
+            expect($menuContainer.children().length).toBe(1);
         }); 
     });
 
-    describe('load guest menu items for unrecognized user types', function() {
+    describe('load only guest menu items for unrecognized user types', function() {
         //call changeMenu() with an unknown user type
         beforeEach(function(done) {
             userType = 'unrecognizedUserType';
@@ -216,21 +210,8 @@ describe('changeMenu() should', function() {
         it('', function() {
             expect($contentContainer.text()).toBe('guest_page is present');
             expect($menuContainer.html()).toContain('<li>Guest Page</li>');
+            expect($menuContainer.children().length).toBe(1);
         }); 
     }); 
 
-    describe('not load menu items if it has a wrong url', function() {
-        //call changeMenu() with the guest user type
-        beforeEach(function(done) {
-            userType = 'guest';
-            $menuContainer.on("DOMSubtreeModified", function() {
-                if ($menuContainer.text() != '') done();
-            });
-            changeMenu($menuContainer, navigationObject, userType, $contentContainer);
-        });
-
-        it('', function() {
-            expect($menuContainer.html()).not.toContain('<li>Page with Wrong URL</li>');
-        }); 
-    });
 });
