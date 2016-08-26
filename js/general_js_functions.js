@@ -10,20 +10,20 @@ function changeContent($element, navigationObject, pageName) {
 }
 
 function changeMenu($menuContainer, navigationObject, userType, $contentContainer) {
+    $menuContainer.empty();
     var $newElement;
     //To address unrecognized user types
     if (userType != 'authoritarian' & userType != 'user')
         userType = 'guest';
     for (page in navigationObject) {
         if (navigationObject[page]['displayFor'][userType]) {
-            // load(navigationObject[page]['url'], function() { //See if there's a better way to check if a url is correct
-            //     // if (status == 'error')
-            //     //     continue;
+            (function(page) {
                 $newElement = $('<li>' + navigationObject[page]['displayName'] + '</li>');
-                $newElement.click(changeContent($contentContainer, navigationObject, page));
+                $newElement.on('click', function() {
+                    changeContent($contentContainer, navigationObject, page);
+                });
                 $menuContainer.append($newElement);
-            //});
-            
+            })(page);
         }
     }
 }

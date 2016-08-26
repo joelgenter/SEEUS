@@ -10,11 +10,11 @@
 <head>
     <link rel="stylesheet" type="text/css" href="css/content.css">
     <script>
-        parent.iframeMenu.contentWindow.changeMenu(
-            "<?php 
-                if (isset($_SESSION['eid']))
-                    echo $_SESSION['eid'];
-            ?>");
+        // parent.iframeMenu.contentWindow.changeMenu(
+        //     "<?php 
+        //         if (isset($_SESSION['eid']))
+        //             echo $_SESSION['eid'];
+        //     ?>");
             
         var pageContent = "";
         var escortsRemaining = <?php echo $escortsRemaining ?>;
