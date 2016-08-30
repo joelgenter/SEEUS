@@ -1,7 +1,7 @@
 var navigation = {
     home: {
         displayName: 'Home',
-        url: 'home.php',
+        url: 'views/home.php',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -10,7 +10,7 @@ var navigation = {
     },
     login: {
         displayName: 'Login',
-        url: 'login.php',
+        url: 'views/login.php',
         displayFor: {
             authoritarian: false,
             user: false,
@@ -19,7 +19,7 @@ var navigation = {
     },
     register: {
         displayName: 'Register',
-        url: 'register.php',
+        url: 'views/register.php',
         displayFor: {
             authoritarian: false,
             user: false,
@@ -28,7 +28,7 @@ var navigation = {
     },
     dispatch: {
         displayName: 'Dispatch',
-        url: 'dispatch.php',
+        url: 'views/escorts/dispatch.php',
         displayFor: {
             authoritarian: true,
             user: false,
@@ -37,7 +37,7 @@ var navigation = {
     },
     archive: {
         displayName: 'Archive',
-        url: 'archive.php',
+        url: 'views/escorts/archive.php',
         displayFor: {
             authoritarian: true,
             user: false,
@@ -46,7 +46,7 @@ var navigation = {
     },
     request: {
         displayName: 'Request Escort',
-        url: 'request.php',
+        url: 'views/escorts/request.php',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -55,7 +55,7 @@ var navigation = {
     },
     user: {
         displayName: 'My Escorts',
-        url: 'home.php',
+        url: 'views/escorts/user.php',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -64,7 +64,7 @@ var navigation = {
     },
     settings: {
         displayName: 'Settings',
-        url: 'settings.php',
+        url: 'views/settings.php',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -73,7 +73,7 @@ var navigation = {
     },
     logout: {
         displayName: 'Logout',
-        url: 'logout.php',
+        url: 'views/logout.php',
         displayFor: {
             authoritarian: true,
             user: true,
