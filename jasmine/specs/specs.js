@@ -215,3 +215,51 @@ describe('changeMenu() should', function() {
     }); 
 
 });
+
+describe('getUserType() should return', function() {
+    var userType;
+    var ajaxAddresses;
+    var checkVarInterval;
+
+    beforeEach(function() {
+        userType = undefined;
+    });
+
+    describe('"guest" userType when the ajax in the function fails', function() {
+        beforeEach(function(done) {
+            ajaxAddresses = {
+                getUserType: 'specs/ajax_files/nonExistentPage.php'
+            };
+            getUserType(ajaxAddresses, function(data){userType = data});
+            checkVarInterval = setInterval(function() {
+                if (userType != undefined) {
+                    clearInterval(checkVarInterval);
+                    done();
+                }
+            }, 5);
+        });
+
+        it('', function() {
+            expect(userType).toEqual('guest');
+        });
+    });
+
+    describe('a userType when the ajax in the function is successful', function() {
+        beforeEach(function(done) {
+            ajaxAddresses = {
+                getUserType: 'specs/ajax_files/existing_file.php'
+            };
+            getUserType(ajaxAddresses, function(data){userType = data});
+            checkVarInterval = setInterval(function() {
+                if (userType != undefined) {
+                    clearInterval(checkVarInterval);
+                    done();
+                }
+            }, 5);
+        })
+
+        it('', function() {
+            expect(userType).toEqual('authoritarian');
+        });
+    });
+});

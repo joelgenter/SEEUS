@@ -27,3 +27,19 @@ function changeMenu($menuContainer, navigationObject, userType, $contentContaine
         }
     }
 }
+
+function getUserType(ajaxAddresses, callback) {
+        $.get(ajaxAddresses['getUserType'])
+            .done(function(data) {
+                console.log('it was successful');
+                callback(data);
+            })
+            .fail(function( jqXHR, textStatus, errorThrown) {
+                console.log('it failed');
+                for (item in jqXHR) {
+                    console.log(item + ' ' + jqXHR[item]);
+                }
+                console.log(textStatus + ' ' + errorThrown);
+                callback('guest');
+            })
+}

@@ -22,20 +22,11 @@
     <div id="rightBorder"></div> <!--I should check to see if I can just add a border to the right side of '#centerPane'-->
 </div>
 
-<?php
-    if (!isset($_SESSION['eid'])) 
-        $userType = 'guest';
-    elseif ($_SESSION['eid'] == 1 | $_SESSION['eid'] == 2) 
-        $userType = 'authoritarian';
-    else
-        $userType = 'user';
-?>
-
 <script>  
-    var userType = <?php echo "'" . $userType . "'" ?>;
-    var $menuContainer = $('#menuContainer');
-    var $contentContainer = $('#contentContainer');
-    
+    var $menuContainer = $('#menuContainer'),
+        $contentContainer = $('#contentContainer'),
+        userType;
+    getUserType(ajaxAddresses, function(data) {userType = data});
     changeMenu($menuContainer, navigation, userType, $contentContainer);
     changeContent($contentContainer, navigation, 'home');
 

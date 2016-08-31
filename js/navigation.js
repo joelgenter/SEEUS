@@ -1,7 +1,8 @@
+//all urls are relative to index.html
 var navigation = {
     home: {
         displayName: 'Home',
-        url: 'views/home.php',
+        url: 'views/home.html',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -10,7 +11,7 @@ var navigation = {
     },
     login: {
         displayName: 'Login',
-        url: 'views/login.php',
+        url: 'views/login.html',
         displayFor: {
             authoritarian: false,
             user: false,
@@ -19,7 +20,7 @@ var navigation = {
     },
     register: {
         displayName: 'Register',
-        url: 'views/register.php',
+        url: 'views/register.html',
         displayFor: {
             authoritarian: false,
             user: false,
@@ -28,7 +29,7 @@ var navigation = {
     },
     dispatch: {
         displayName: 'Dispatch',
-        url: 'views/escorts/dispatch.php',
+        url: 'views/escorts/dispatch.html',
         displayFor: {
             authoritarian: true,
             user: false,
@@ -37,7 +38,7 @@ var navigation = {
     },
     archive: {
         displayName: 'Archive',
-        url: 'views/escorts/archive.php',
+        url: 'views/escorts/archive.html',
         displayFor: {
             authoritarian: true,
             user: false,
@@ -46,7 +47,7 @@ var navigation = {
     },
     request: {
         displayName: 'Request Escort',
-        url: 'views/escorts/request.php',
+        url: 'views/escorts/request.html',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -55,7 +56,7 @@ var navigation = {
     },
     user: {
         displayName: 'My Escorts',
-        url: 'views/escorts/user.php',
+        url: 'views/escorts/user.html',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -64,7 +65,7 @@ var navigation = {
     },
     settings: {
         displayName: 'Settings',
-        url: 'views/settings.php',
+        url: 'views/settings.html',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -73,7 +74,7 @@ var navigation = {
     },
     logout: {
         displayName: 'Logout',
-        url: 'views/logout.php',
+        url: 'views/logout.html',
         displayFor: {
             authoritarian: true,
             user: true,
@@ -81,3 +82,7 @@ var navigation = {
         }
     }
 };
+
+var ajaxAddresses = {
+    getUserType: "php/get_user_type.php"
+}
