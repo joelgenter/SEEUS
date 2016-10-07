@@ -84,5 +84,6 @@ var navigation = {
 };
 
 var ajaxAddresses = {
-    getUserType: "php/get_user_type.php"
-}
+    getUserType: 'php/get_user_type.php',
+    login: 'php/login.php'
+};
