@@ -29,27 +29,29 @@
             {
                 email: $emailField.val(),
                 password: $passwordField.val()
-            })
-            .done(function(data) {
-                data = JSON.parse(data);
-                if (data.errorMessage == '') {
-                    if (data.isRegistered & !data.isVerified) {
-                        //change content to verification page
-                    }
-                    else {
-                        getUserType(ajaxAddresses, function(data) {
-                            userType = data;
-                        });
-                        changeMenu($menuContainer, navigation, userType, $contentContainer);
-                        changeContent($contentContainer, navigation, 'home');
-                    }
-                } else {  
-                    $errorContainer.html(data.errorMessage);
+            }
+        )
+        .done(function(data) {
+            $errorContainer.html(data);
+            data = JSON.parse(data);            
+            if (data.errorMessages.length == 0) {
+                if (data.emailRegistered & !data.emailVerified) {
+                    changeContent($contentContainer, navigation, 'email_verification');
                 }
-            })
-            .fail(function() {
-                $errorContainer.text('Error connecting to server');
-            });
+                else {
+                    getUserType(ajaxAddresses, function(data) {
+                        userType = data;
+                    });
+                    changeMenu($menuContainer, navigation, userType, $contentContainer);
+                    changeContent($contentContainer, navigation, 'home');
+                }
+            } else {  
+                $errorContainer.html(data.errorMessages);
+            }
+        })
+        .fail(function() {
+            $errorContainer.text('Error connecting to server');
+        });
     });
 
 </script>

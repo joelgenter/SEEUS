@@ -80,6 +80,14 @@ var navigation = {
             user: true,
             guest: false
         }
+    },
+    email_verification: {
+        url: 'views/email_verification.html',
+        displayFor: {
+            authoritarian: false,
+            user: false,
+            guest: false
+        }
     }
 };
 

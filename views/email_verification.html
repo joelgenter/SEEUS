@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to SEEUS</title>
+<link rel="stylesheet" type="text/css" href="css/content.css">
+</head>
+<body>
+<div id="pageTitle">Email Verification</div>
+<div id="focusDiv">
+    <div id="errorDivContainer">
+        <div id="errorDiv"></div>
+    </div>
+	<div>
+		&nbsp<input type="password" name="password" placeholder="Verification Code">
+		<br>
+		<input type="submit" value="Verify">
+		<br>
+		<input type="submit" value="Send Code Again">
+	</div>
+</div>
+
+<script>
+    var $emailField = $('input[name="email"]'),
+        $passwordField = $('input[name="password"]'),
+        $errorContainer = $('#errorDivContainer');
+
+    $('input[value="Login"]').click(function() {
+        $.post(ajaxAddresses['login'], 
+            {
+                email: $emailField.val(),
+                password: $passwordField.val()
+            })
+            .done(function(data) {
+                data = JSON.parse(data);
+                if (data.errorMessage == '') {
+                    if (data.isRegistered & !data.isVerified) {
+                        //change content to verification page
+                    }
+                    else {
+                        getUserType(ajaxAddresses, function(data) {
+                            userType = data;
+                        });
+                        changeMenu($menuContainer, navigation, userType, $contentContainer);
+                        changeContent($contentContainer, navigation, 'home');
+                    }
+                } else {  
+                    $errorContainer.html(data.errorMessage);
+                }
+            })
+            .fail(function() {
+                $errorContainer.text('Error connecting to server');
+            });
+    });
+
+</script>
+</body>
+</html>

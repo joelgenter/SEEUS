@@ -1,41 +1,23 @@
 <?php
-require 'validation.php';
-require 'database_connection.php';
 
-$email = cleanInput($_POST['email']);
-$password = cleanInput($_POST['password']);
+require_once 'Class_Autoloader.php';
+require_once 'DB_Connection.php';
 
-$returnData = validate($email, 
-    [
-        'emailRegistered',
-        'emailVerified'
-    ], 
-    $con
-);
+$currentUser = new User($dbConnection, $_POST['email']);
 
+$currentUser->checkEmailRegistration();
+$currentUser->checkEmailVerification();
+$currentUser->checkPassword($_POST['password']);
 
+$returnData = $currentUser->getReturnData();
 
-if ($returnData['errorMessage'] == '') {
-    $sql = 'SELECT
-        VerificationCode,
-        Password, 
-        EID, 
-        FirstName
-        FROM users 
-        WHERE Email = "' . $email . '"';
-    $result = $con->query($sql);
-    $row = mysqli_fetch_assoc($result);
-    if ($password == $row['Password']) {
-        session_start();
-        if (!$returnData['isVerified']) {
-            $_SESSION['verificationCode'] = $row['VerificationCode'];
+if ($returnData['emailRegistered']) {
+    if ($returnData['passwordCorrect']) {
+        if ($returnData['emailVerified']) {
+            $currentUser->login();
         } else {
-            $_SESSION['eid'] = $row['EID'];
-            $_SESSION['firstName'] = $row['FirstName'];
-            $_SESSION['password'] = $row['Password'];
+            $_SESSION['currentUser'] = $currentUser;
         }
-    } else {
-        $returnData['errorMessage'] .= 'Incorrect email and/or password<br>';        
     }
 }
 echo json_encode($returnData);

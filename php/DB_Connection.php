@@ -16,8 +16,8 @@ $DB_PASS = '';
 #$DB_HOST = 'mysql7.000webhost.com';
 #$DB_USER = 'a6995183_Admin';
 #$DB_PASS = 'testpass';	
-$con = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+$dbConnection = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 
-if ($con->connect_error) {
-    die("Connection failed: " . $con->connect_error);
+if ($dbConnection->connect_error) {
+    die("Connection failed: " . $dbConnection->connect_error);
 }
