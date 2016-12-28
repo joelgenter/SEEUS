@@ -1,6 +1,9 @@
 <?php
 session_start();
 require_once 'Class_Autoloader.php';
+
+Security::assertUserIs(['authoritarian', 'user']);
+
 Utility::connectDB();
 
 $sql = 

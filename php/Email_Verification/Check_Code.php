@@ -2,7 +2,7 @@
 session_start();
 require_once '../Class_Autoloader.php';
 
-$enteredCode = Utility::cleanInput($_POST['enteredCode']);
+$enteredCode = Security::cleanInput($_POST['enteredCode']);
 
 $currentUser = unserialize($_SESSION['currentUser']);
 $currentUser->verificationCodeCorrect($enteredCode);

@@ -1,11 +1,12 @@
 <?php
 session_start();
-
 require_once '../Class_Autoloader.php';
 
-$currentPassword  = Utility::cleanInput($_POST['currentPassword']);
-$newPassword      = Utility::cleanInput($_POST['newPassword']);
-$confirmPassword  = Utility::cleanInput($_POST['confirmPassword']);
+Security::assertUserIs(['authoritarian', 'user']);
+
+$currentPassword  = Security::cleanInput($_POST['currentPassword']);
+$newPassword      = Security::cleanInput($_POST['newPassword']);
+$confirmPassword  = Security::cleanInput($_POST['confirmPassword']);
 
 Data_Validation::checkPasswords($newPassword, $confirmPassword);
 

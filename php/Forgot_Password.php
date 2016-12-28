@@ -3,7 +3,7 @@ session_start();
 
 require_once 'Class_Autoloader.php';
 
-$email = Utility::cleanInput($_POST['email']);
+$email = Security::cleanInput($_POST['email']);
 
 
 User::connectDB();

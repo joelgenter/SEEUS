@@ -1,15 +1,16 @@
 <?php
 session_start();
-
 require_once 'Class_Autoloader.php';
 
-$email           = Utility::cleanInput($_POST['email']);
-$password        = Utility::cleanInput($_POST['password']);
-$confirmPassword = Utility::cleanInput($_POST['confirmPassword']);
-$firstName       = Utility::cleanInput($_POST['firstName']);
-$lastName        = Utility::cleanInput($_POST['lastName']);
-$eid             = Utility::cleanInput($_POST['eid']);
-$phoneNumber     = Utility::cleanInput($_POST['phoneNumber']);
+Security::assertUserIs(['guest']);
+
+$email           = Security::cleanInput($_POST['email']);
+$password        = Security::cleanInput($_POST['password']);
+$confirmPassword = Security::cleanInput($_POST['confirmPassword']);
+$firstName       = Security::cleanInput($_POST['firstName']);
+$lastName        = Security::cleanInput($_POST['lastName']);
+$eid             = Security::cleanInput($_POST['eid']);
+$phoneNumber     = Security::cleanInput($_POST['phoneNumber']);
 
 Data_Validation::connectDB();
 

@@ -2,8 +2,8 @@
 session_start();
 require_once '../Class_Autoloader.php';
 
-$start = Utility::cleanInput($_POST['start']);
-$maxRows = Utility::cleanInput($_POST['maxRows']);
+$start = Security::cleanInput($_POST['start']);
+$maxRows = Security::cleanInput($_POST['maxRows']);
 
 Utility::connectDB();
 

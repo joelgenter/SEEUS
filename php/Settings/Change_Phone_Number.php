@@ -1,9 +1,10 @@
 <?php
 session_start();
-
 require_once '../Class_Autoloader.php';
 
-$newPhoneNumber  = Utility::cleanInput($_POST['newPhoneNumber']);
+Security::assertUserIs(['authoritarian', 'user']);
+
+$newPhoneNumber  = Security::cleanInput($_POST['newPhoneNumber']);
 
 Data_Validation::checkPhoneNumber($newPhoneNumber);
 

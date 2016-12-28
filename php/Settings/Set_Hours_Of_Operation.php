@@ -2,21 +2,23 @@
 session_start();
 require_once '../Class_Autoloader.php';
 
+Security::assertUserIs(['authoritarian']);
+
 //cleaning the input
-$sundayStart    = Utility::cleanInput($_POST['sundayStart']);
-$sundayEnd      = Utility::cleanInput($_POST['sundayEnd']);
-$mondayStart    = Utility::cleanInput($_POST['mondayStart']);
-$mondayEnd      = Utility::cleanInput($_POST['mondayEnd']);
-$tuesdayStart   = Utility::cleanInput($_POST['tuesdayStart']);
-$tuesdayEnd     = Utility::cleanInput($_POST['tuesdayEnd']);
-$wednesdayStart = Utility::cleanInput($_POST['wednesdayStart']);
-$wednesdayEnd   = Utility::cleanInput($_POST['wednesdayEnd']);
-$thursdayStart  = Utility::cleanInput($_POST['thursdayStart']);
-$thursdayEnd    = Utility::cleanInput($_POST['thursdayEnd']);
-$fridayStart    = Utility::cleanInput($_POST['fridayStart']);
-$fridayEnd      = Utility::cleanInput($_POST['fridayEnd']);
-$saturdayStart  = Utility::cleanInput($_POST['saturdayStart']);
-$saturdayEnd    = Utility::cleanInput($_POST['saturdayEnd']);
+$sundayStart    = Security::cleanInput($_POST['sundayStart']);
+$sundayEnd      = Security::cleanInput($_POST['sundayEnd']);
+$mondayStart    = Security::cleanInput($_POST['mondayStart']);
+$mondayEnd      = Security::cleanInput($_POST['mondayEnd']);
+$tuesdayStart   = Security::cleanInput($_POST['tuesdayStart']);
+$tuesdayEnd     = Security::cleanInput($_POST['tuesdayEnd']);
+$wednesdayStart = Security::cleanInput($_POST['wednesdayStart']);
+$wednesdayEnd   = Security::cleanInput($_POST['wednesdayEnd']);
+$thursdayStart  = Security::cleanInput($_POST['thursdayStart']);
+$thursdayEnd    = Security::cleanInput($_POST['thursdayEnd']);
+$fridayStart    = Security::cleanInput($_POST['fridayStart']);
+$fridayEnd      = Security::cleanInput($_POST['fridayEnd']);
+$saturdayStart  = Security::cleanInput($_POST['saturdayStart']);
+$saturdayEnd    = Security::cleanInput($_POST['saturdayEnd']);
 
 foreach ($_POST as $key => $value) {
     if (!Data_Validation::timeFormatCorrect($value)) {

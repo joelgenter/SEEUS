@@ -2,8 +2,8 @@
     require '../Class_Autoloader.php';
     Utility::connectDB();
     
-    $escortID = Utility::cleanInput($_POST['escortID']);
-    $newEscortStatusID = Utility::cleanInput($_POST['newEscortStatusID']);
+    $escortID = Security::cleanInput($_POST['escortID']);
+    $newEscortStatusID = Security::cleanInput($_POST['newEscortStatusID']);
 
     $sql = 
         'UPDATE escorts

@@ -18,11 +18,11 @@ $sqlResult = Data_Validation::$dbConnection->query($sql);
 if ($sqlResult->num_rows > 0)
     array_push($errorMessages, "You already have a pending escort request");
 else if (Data_Validation::serviceIsOnline()) {
-    $numberInParty  = Utility::cleanInput($_POST['numberInParty']);
-    $location       = Utility::cleanInput($_POST['location']);
-    $destination    = Utility::cleanInput($_POST['destination']);
-    $comments       = Utility::cleanInput($_POST['comments']);
-    $phoneNumber    = Utility::cleanInput($_POST['phoneNumber']);
+    $numberInParty  = Security::cleanInput($_POST['numberInParty']);
+    $location       = Security::cleanInput($_POST['location']);
+    $destination    = Security::cleanInput($_POST['destination']);
+    $comments       = Security::cleanInput($_POST['comments']);
+    $phoneNumber    = Security::cleanInput($_POST['phoneNumber']);
 
     Data_Validation::checkNumberInParty($numberInParty);
     Data_Validation::checkLocationDestination($location, $destination);

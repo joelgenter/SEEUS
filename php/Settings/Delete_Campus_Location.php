@@ -2,7 +2,9 @@
 session_start();
 require_once '../Class_Autoloader.php';
 
-$campusLocationToDelete  = Utility::cleanInput($_POST['campusLocationToDelete']);
+Security::assertUserIs(['authoritarian']);
+
+$campusLocationToDelete  = Security::cleanInput($_POST['campusLocationToDelete']);
 
 
 Utility::connectDB();

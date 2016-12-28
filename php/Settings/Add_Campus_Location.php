@@ -2,7 +2,9 @@
 session_start();
 require_once '../Class_Autoloader.php';
 
-$campusLocationToAdd  = Utility::cleanInput($_POST['campusLocationToAdd']);
+Security::assertUserIs(['authoritarian']);
+
+$campusLocationToAdd  = Security::cleanInput($_POST['campusLocationToAdd']);
 
 Utility::connectDB();
 

@@ -1,10 +1,11 @@
 <?php
 session_start();
-
 require_once 'Class_Autoloader.php';
 
-$email = Utility::cleanInput($_POST['email']);
-$password = Utility::cleanInput($_POST['password']);
+Security::assertUserIs(['guest']);
+
+$email = Security::cleanInput($_POST['email']);
+$password = Security::cleanInput($_POST['password']);
 $currentUser = new User($email);
 
 //all these return boolean values and add error messages

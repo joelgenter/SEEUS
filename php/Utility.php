@@ -1,12 +1,6 @@
 <?php
 class Utility {
     public static $dbConnection;
-    public static function cleanInput($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
 
     public static function connectDB() {
          static::$dbConnection = new mysqli(
