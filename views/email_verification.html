@@ -10,48 +10,40 @@
     <div id="errorDivContainer">
         <div id="errorDiv"></div>
     </div>
-	<div>
-		&nbsp<input type="password" name="password" placeholder="Verification Code">
+	<form>
+		&nbsp<input type="text" name="verificationCode" placeholder="Verification Code">
 		<br>
 		<input type="submit" value="Verify">
 		<br>
 		<input type="submit" value="Send Code Again">
-	</div>
+	</form>
 </div>
 
 <script>
-    var $emailField = $('input[name="email"]'),
-        $passwordField = $('input[name="password"]'),
-        $errorContainer = $('#errorDivContainer');
+var $verificationCodeField = $('input[name="verificationCode"]'),
+    $errorContainer = $('#errorDivContainer');
 
-    $('input[value="Login"]').click(function() {
-        $.post(ajaxAddresses['login'], 
-            {
-                email: $emailField.val(),
-                password: $passwordField.val()
-            })
-            .done(function(data) {
-                data = JSON.parse(data);
-                if (data.errorMessage == '') {
-                    if (data.isRegistered & !data.isVerified) {
-                        //change content to verification page
-                    }
-                    else {
-                        getUserType(ajaxAddresses, function(data) {
-                            userType = data;
-                        });
-                        changeMenu($menuContainer, navigation, userType, $contentContainer);
-                        changeContent($contentContainer, navigation, 'home');
-                    }
-                } else {  
-                    $errorContainer.html(data.errorMessage);
-                }
-            })
-            .fail(function() {
-                $errorContainer.text('Error connecting to server');
-            });
+$('form').submit(function() {
+    $.post('php/Email_Verification/Check_Code.php', 
+        {
+            enteredCode: $verificationCodeField.val(),
+        }
+    )
+    .done(function(data) {
+        $errorContainer.html(data);
+        data = JSON.parse(data);
+        if (data.errorMessages.length == 0) {
+            userInterface.refreshMenu();
+            userInterface.loadContent('accountSettings');
+        } else {
+            $errorContainer.html(data.errorMessages);
+        }
+    })
+    .fail(function() {
+        $errorContainer.html('Error connecting to server');
     });
-
+    return false; //prevents page refresh on form submit
+});
 </script>
 </body>
 </html>

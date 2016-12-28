@@ -1,23 +1,31 @@
 <?php
+session_start();
 
 require_once 'Class_Autoloader.php';
-require_once 'DB_Connection.php';
 
-$currentUser = new User($dbConnection, $_POST['email']);
+$email = Utility::cleanInput($_POST['email']);
+$password = Utility::cleanInput($_POST['password']);
+$currentUser = new User($email);
 
-$currentUser->checkEmailRegistration();
-$currentUser->checkEmailVerification();
-$currentUser->checkPassword($_POST['password']);
+//all these return boolean values and add error messages
+$isRegistered = User::emailRegistered($email);
+$isVerified = $currentUser->emailVerified();
+$passwordCorrect = $currentUser->passwordCorrect($password);
 
-$returnData = $currentUser->getReturnData();
+$errorMessages = $currentUser::getErrorMessages();
 
-if ($returnData['emailRegistered']) {
-    if ($returnData['passwordCorrect']) {
-        if ($returnData['emailVerified']) {
-            $currentUser->login();
-        } else {
-            $_SESSION['currentUser'] = $currentUser;
-        }
+if ($isRegistered && $passwordCorrect) {
+    if ($isVerified) {
+        $currentUser->login();
+    } else {
+        $_SESSION['currentUser'] = serialize($currentUser);
     }
 }
+
+$returnData = [
+    "emailVerified"  => $isVerified,
+    "errorMessages"  => $errorMessages
+];
+
+
 echo json_encode($returnData);

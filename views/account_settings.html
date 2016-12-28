@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to SEEUS</title>
+<link rel="stylesheet" type="text/css" href="css/content.css">
+</head>
+<body>
+<div id="pageTitle">Settings</div>
+<div id="focusDiv">
+    <div id="errorDivContainer">
+        <div id="errorDiv"></div>
+    </div>
+    <div id="subMenuDiv">
+        <div id="passwordButton" class="changeFormOption" >Password</div>
+        <div id="phoneNumberButton" class="changeFormOption" >Phone Number</div>
+    </div>
+    <br>
+    <form> 
+        <div id="passwordFieldContainer">
+            &nbsp<input type="password" placeholder="Current Password" name="currentPassword">
+            <br>
+            &nbsp<input type="password" placeholder="New Password" name="newPassword">&nbsp
+            <br>
+            &nbsp<input type="password" placeholder="Confirm Password" name="confirmPassword">
+        </div>
+        <div id="phoneNumberContainer">
+            &nbsp<input type="text" name="newPhoneNumber" placeholder="New Phone Number">
+        </div>
+        <br> <input type="submit" value="Submit">
+    </form>
+    <div id="errorDivContainer">    <!-- should be renamed to something like message container-->
+        <div id="errorDiv"></div>
+        <div id="successDiv"></div>
+    </div>
+</div> <!--focusDiv-->
+
+
+<script>
+//jQuery var declarations
+var $errorContainer   = $('#errorDiv'),
+    $successContainer = $('#successDiv'),
+    
+    //field containers
+    $passwordFieldContainer = $('#passwordFieldContainer'),
+    $phoneNumberContainer   = $('#phoneNumberContainer'),
+
+    //settings buttons
+    $passwordButton    = $('#passwordButton'),
+    $phoneNumberButton = $('#phoneNumberButton'),
+
+    //fields
+    $currentPassword = $('input[name="currentPassword"]'),
+    $newPassword     = $('input[name="newPassword"]'),
+    $confirmPassword = $('input[name="confirmPassword"]'),
+    $newPhoneNumber  = $('input[name="newPhoneNumber"]');
+
+$passwordButton.on('click', function() {
+    this.id = "active";
+    $phoneNumberButton.removeAttr("id");
+    $phoneNumberContainer.hide();
+    $passwordFieldContainer.show();
+    $errorContainer.empty();
+    $successContainer.empty();
+});
+
+$phoneNumberButton.on('click', function() {
+    this.id = "active";
+    $passwordButton.removeAttr("id");
+    $passwordFieldContainer.hide();
+    $phoneNumberContainer.show();
+    $errorContainer.empty();
+    $successContainer.empty();
+});
+
+//populate phone number field with current phone number
+$.post('php/Get_Phone_Number.php')
+.done(function(phoneNumber) {
+    $newPhoneNumber.val(phoneNumber);
+});
+
+$passwordButton.click();
+
+/*
+* form submission
+*/
+$('form').submit(function() {
+
+    //setting url and data to send based on which fields are visible
+    if ($passwordFieldContainer.is(':visible')) {
+        var url = 'php/Settings/Change_Password.php';
+        var dataToSend = {
+            currentPassword: $currentPassword.val(),
+            newPassword:     $newPassword.val(),
+            confirmPassword: $confirmPassword.val()
+        }
+    } else {    //phoneNumberContainer is visible
+        var url = 'php/Settings/Change_Phone_Number.php';
+        var dataToSend = {
+            newPhoneNumber: $newPhoneNumber.val()
+        }
+    }
+    
+    //sending and receving the data
+    $.post(url, dataToSend)
+    .done(function(errorMessages) {
+        $errorContainer.html(errorMessages);        //testing
+        errorMessages = JSON.parse(errorMessages);  
+        if (errorMessages.length == 0) {
+            $errorContainer.empty();
+            $successContainer.html('Change was successful');
+        } else { //there are error messages
+            var errorString = "";
+            for (var i = 0; i < errorMessages.length; i++) {
+                errorString += errorMessages[i] + '<br>';
+            }
+            $successContainer.empty();
+            $errorContainer.html(errorString);
+        }
+    });
+    return false;   //prevents refresh on form submit
+});
+
+</script>
+</body>
+</html>

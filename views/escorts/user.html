@@ -1,90 +1,125 @@
-<?php  
-    require '../database/connection.php';
-    session_start();
-    if (!isset($_SESSION['eid'])) {
-        header('Location: ../index.php');
-    } else if ($_SESSION['eid'] <= 2) {
-        header('Location: ../index.php');
-    }
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="../css/content.css">
 </head>
 <body>
-<div id="pageTitle">Your Escorts</div>  
-<div id="focusDiv">    
-    <?php
-    $result = $con->query("SELECT escorts.DateTimeSubmitted, users.EID, 
-        users.FirstName, users.LastName, escorts.NumberInParty, 
-        escorts.Location, escorts.Destination, escorts.Comments, 
-        escorts.PhoneNumber, escorts.ID, escorts.Status, escorts.DateTimeChanged 
-        FROM escorts INNER JOIN users ON escorts.EID=users.EID 
-        WHERE escorts.EID = \"" . $_SESSION['eid'] . "\" 
-        ORDER BY escorts.DateTimeSubmitted DESC LIMIT 3");
-    if ($result->num_rows > 0) {     
-        echo "<table width=\"60%\" border=\"1px\">
-                <tr>
-                    <th>Time Requested</th>
-                    <th>Location</th>
-                    <th>Destination</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>EID</th>
-                    <th>Number in Party</th>
-                    <th>Phone Number</th>
-                    <th>Comments</th>
-                    <th>Status</th>
-                </tr> ";
-            while ($row = mysqli_fetch_assoc($result)) {
-                $statusCheck = $row['Status'];
-                if ($statusCheck <= 1)
-                    $status = "Not yet dispatched <br> <button onClick=\"changeStatus(" . $row['ID'] . ", 4)\">Cancel</button>";
-                elseif ($statusCheck == 2) 
-                    $status = "Dispatched at " . $row['DateTimeChanged'];
-                elseif ($statusCheck == 3) 
-                    $status = "Canceled by Dispatcher at " . $row['DateTimeChanged'];
-                else 
-                    $status = "Canceled by " . $_SESSION['firstName'] . " at " . $row['DateTimeChanged'];
-                
-                echo " <tr> <td> " . $row['DateTimeSubmitted'] . "</td> 
-                            <td> " . $row['Location'] . "</td>
-                            <td> " . $row['Destination'] . "</td>
-                            <td> " . $row['FirstName'] . "</td>
-                            <td> " . $row['LastName'] . "</td>
-                            <td> " . $row['EID'] . "</td>
-                            <td> " . $row['NumberInParty'] . "</td>
-                            <td> " . $row['PhoneNumber'] . "</td>
-                            <td> " . $row['Comments'] . "</td>
-                            <td> " . $status . "</td></tr>";
-            };
-    } else {
-        echo "No escorts"; 
-    }
-    ?>
-</div>
+<div id="pageTitle">Escorts</div>
+<div id="focusDiv"></div>
+<button id="previous">Previous</button>
+<button id="next">Next</button>
+<div id="testDiv"></div>
 
 <script>
-   setTimeout(reloadPage, 3000);
-   function reloadPage() {
-        location.reload(true);
+    var MAX_ROWS = 3; 
+    var startEscortNumber = 0;
+    var userType;
+    userInterface.getUserType(function(data) {
+        userType = data;
+    });
+
+    loadEscorts(startEscortNumber);
+
+    //used to set initial timer and reset it after clicking next and previous buttons
+    function resetRefreshTimer() {
+        clearInterval(userInterface.refreshTimer);
+        userInterface.refreshTimer = setInterval(function(){loadEscorts(0)}, 10000);
+    }
+    resetRefreshTimer();
+
+    $focusDiv = $('#focusDiv');
+    $previousButton = $('#previous');
+    $nextButton = $('#next');
+    $testDiv = $('#testDiv');
+
+    $previousButton.on('click', function() {
+        startEscortNumber -= MAX_ROWS;
+        loadEscorts(startEscortNumber);
+        if (startEscortNumber <= 0)
+            $previousButton.hide();
+        resetRefreshTimer();
+    });
+    $previousButton.hide(); //hide when page loads because there'll be no previous page
+
+    $nextButton.on('click', function() {
+        startEscortNumber += MAX_ROWS;
+        loadEscorts(startEscortNumber);
+        if ($previousButton.is(':hidden'))
+            $previousButton.show();
+        resetRefreshTimer();
+    });
+
+    function loadEscorts(start) {
+        $.post('php/Escorts/Get_Escorts.php',
+            {
+                start:        start,
+                maxRows: MAX_ROWS
+            }
+        )
+        .done(function(escortList) {
+            // $focusDiv.html(escortList);         //testing
+            escortList = JSON.parse(escortList);
+            if (escortList.length == 0)          //when no escorts are returned, hide next 
+                $nextButton.hide();              //button because there are no more escorts
+            else if ($nextButton.is(':hidden'))     //if there are escorts and button is hidden
+                $nextButton.show();                 //show button
+            var html = 
+                "<table width=\"60%\" border=\"1px\">" +
+                    "<tr>" +
+                        "<th>Last Modified</th>" +
+                        "<th>Location</th>" +
+                        "<th>Destination</th>" +
+                        "<th>First Name</th>" +
+                        "<th>Last Name</th>" +
+                        "<th>EID</th>" +
+                        "<th>Number in Party</th>" +
+                        "<th>Phone Number</th>" +
+                        "<th>Comments</th>" +
+                        "<th>Status</th>" +
+                    "</tr>"
+                $focusDiv.html(html);
+            for (var i = 0; i < escortList.length; i++) {
+                var buttons = '';
+                if (escortList[i].status == "Requested") {
+                    if (userType == 'authoritarian') {
+                        var buttons = '';
+                        buttons += '<button onclick="changeStatus(' + escortList[i].id + ', 1)">Dispatch</button>';
+                        buttons += '<button onclick="changeStatus(' + escortList[i].id + ', 2)">Cancel</button>';
+                    } else //userType == user
+                        buttons += '<button onclick="changeStatus(' + escortList[i].id + ', 3)">Cancel</button>';
+                }
+                html =
+                    "<tr>" +
+                        "<td>" + escortList[i].dateTimeChanged  + "</td>" +
+                        "<td>" + escortList[i].location         + "</td>" +
+                        "<td>" + escortList[i].destination      + "</td>" +
+                        "<td>" + escortList[i].firstName        + "</td>" +
+                        "<td>" + escortList[i].lastName         + "</td>" +
+                        "<td>" + escortList[i].eid              + "</td>" +
+                        "<td>" + escortList[i].numberInParty    + "</td>" +
+                        "<td>" + escortList[i].phoneNumber      + "</td>" +
+                        "<td>" + escortList[i].comments         + "</td>" +
+                        "<td>" + escortList[i].status + buttons + "</td>" +
+                    "</tr>";
+                $focusDiv.append(html);
+            }
+            html = "</table>";
+            $focusDiv.append(html);
+        })
     }
     
-    function changeStatus(id, newStatus) {
-        var information = "id=" + id + "&newStatus=" + newStatus;
-        var serverRequest = new XMLHttpRequest();
-        serverRequest.open("POST", "../ajax/change_status.php", true);
-        serverRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        
-        serverRequest.onreadystatechange = function() {
-                if (serverRequest.readyState == 4) {
-                    reloadPage();
-                }
-                
-        }
-        serverRequest.send(information);
+    function changeStatus(id, newStatusID) {
+        $.post('php/Escorts/Change_Status.php', 
+            {
+                escortID: id,
+                newEscortStatusID: newStatusID
+            }
+        )
+        .done(function(wasSuccessful) {
+            if (wasSuccessful) {
+                loadEscorts(0);
+            }
+        })
     }
 </script>
 

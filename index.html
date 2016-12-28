@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="css/template.css">
-<script src="jquery/jquery-3.1.0.min.js"></script>
-<script src="js/general_js_functions.js"></script>
-<script src="js/navigation.js"></script>
+<link rel="stylesheet" type="text/css" href="css/content.css">
 </head>
 <body onblur="pauseVideo()" onfocus="playVideo()">
 <div id="videoContainer"> 
@@ -17,18 +15,26 @@
     <div id="leftPane">
         <img id="seeusLogo" src="media/seeus_logo_transparent.png">
         <div id="menuContainer"></div>
+        <div id="statusContainer"></div>
     </div>
     <div id="contentContainer"></div>
     <div id="rightBorder"></div> <!--I should check to see if I can just add a border to the right side of '#centerPane'-->
 </div>
 
+<script src="jquery/jquery-3.1.0.min.js"></script>
+<script src="js/UserInterface.js"></script>
 <script>  
-    var $menuContainer = $('#menuContainer'),
+    var $menuContainer    = $('#menuContainer'),
         $contentContainer = $('#contentContainer'),
-        userType;
-    getUserType(ajaxAddresses, function(data) {userType = data});
-    changeMenu($menuContainer, navigation, userType, $contentContainer);
-    changeContent($contentContainer, navigation, 'home');
+        $statusContainer  = $('#statusContainer');
+    
+    var userInterface = new UserInterface($contentContainer, $menuContainer, $statusContainer);
+
+    userInterface.updateStatusDisplay();
+    userInterface.updateStatusDisplayTimer = setInterval(function() {userInterface.updateStatusDisplay()}, 3000);
+
+    userInterface.refreshMenu();
+    userInterface.loadContent('register');
 
     // In <body> there's a pointer to these functions
     // var video = document.getElementById("video");

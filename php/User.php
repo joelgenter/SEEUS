@@ -1,28 +1,28 @@
 <?php
-class User extends Utility{
+class User extends Utility {
     /*
     * declaration of local variables
     */
-    private $dbConnection;      //database mysqli connection
-    private $userInfo;          //results of db query in constructor
+    // private static $dbConnection;      //database mysqli connection
+    public $userInfo;          //results of db query in constructor
     private $email;             //the email used to initialize this object
-
-    //the data ultimately returned to UI in JSON
-    private $returnData = [
-        "emailRegistered"           => NULL,
-        "emailVerified"             => NULL,
-        "passwordCorrect"           => NULL,
-        "verificationCodeCorrect"   => NULL,
-        "errorMessages"             => []
-    ];
-
+    private static $errorMessages = []; 
 
     /*
-    * constructor function
+    * private helper methods
     */
-    public function __construct($dbConnection, $email) {
-        $this->dbConnection = $dbConnection;
-        $this->email = $this->cleanInput($email);
+    // private static function connectDB() {
+    //      static::$dbConnection = new mysqli(
+    //         static::$DB_HOST, static::$DB_USER, static::$DB_PASS, static::$DB_NAME
+    //     );
+    // }
+
+    /*
+    * magic methods
+    */
+    public function __construct($email) {
+        static::connectDB();
+        $this->email = $email;
         $sql = 'SELECT
                     Password,
                     EID,
@@ -30,58 +30,74 @@ class User extends Utility{
                     Verified,
                     VerificationCode,
                     Password,
-                    EID,
-                    FirstName
+                    LastName
                 FROM users 
                 WHERE Email = "' . $this->email . '"';
-        $result = $this->dbConnection->query($sql);
-        $this->userInfo = mysqli_fetch_assoc($result);
+        $result = static::$dbConnection->query($sql);
+        $this->userInfo = mysqli_fetch_assoc($result);     
     }
+
+    public function __sleep() {
+        $this->userInfo = serialize($this->userInfo);
+        $this->email = serialize($this->email);
+        return array('email', 'userInfo');
+        // unset(static::$dbConnection);
+    }
+
+    public function __wakeup() {
+        $this->userInfo = unserialize($this->userInfo);
+        $this->email = unserialize($this->email);        
+        static::connectDB();
+    }
+
 
 
     /*
     * verification functions
+    * return boolean values and push strings to $errorMessages when relevant
     */
-    public function checkEmailRegistration() { 
-            if ($this->userInfo == FALSE) {
-                $this->returnData['emailRegistered'] = FALSE;
-                array_push($this->returnData['errorMessages'], "Email not registered");
-            } else 
-                $this->returnData['emailRegistered'] = TRUE;
-    }
+    public static function emailRegistered($email) {
+        static::connectDB();
+        $sql = 'SELECT
+                    Email
+                FROM users 
+                WHERE Email = "' . $email . '"';
+                
+        $result = static::$dbConnection->query($sql);
 
-    public function checkEmailVerification() {
-        if ($this->userInfo != FALSE) {
-            if ($this->userInfo['Verified'] == 1)
-                $this->returnData['emailVerified'] = TRUE;
-            else
-                $this->returnData['emailVerified'] = FALSE; 
+        if ($result->num_rows == 0) {
+            array_push(static::$errorMessages, "Email not registered");
+            return false;
+        } else {
+            return true;
         }
     }
 
-    public function checkPassword($enteredPassword) {
+    public function emailVerified() {
+        if ($this->userInfo != FALSE && $this->userInfo['Verified'] == 1) 
+            return TRUE;
+        else
+            return FALSE; 
+    }
+
+    public function passwordCorrect($enteredPassword) {
         if ($this->userInfo != FALSE) {
-            $enteredPassword = $this->cleanInput($enteredPassword);
             if ($this->userInfo['Password'] == $enteredPassword) 
-                $this->returnData['passwordCorrect'] = TRUE;
+                return TRUE;
             else {
-                $this->returnData['passwordCorrect'] = FALSE;
-                array_push($this->returnData['errorMessages'],
-                    "Incorrect password"
-                );
+                array_push(static::$errorMessages, "Incorrect password");
+                return FALSE;
             }
-        }
+        } else 
+            return FALSE;
     }
     
-    public function checkVerificationCode($enteredCode) {
-        $enteredCode = cleanInput($enteredCode);
+    public function verificationCodeCorrect($enteredCode) {
         if ($enteredCode == $this->userInfo["VerificationCode"])
-            $this->returnData["verificationCodeCorrect"] == TRUE;
+            return TRUE;
         else {
-            $this->returnData["verificationCodeCorrect"] == FALSE;
-            array_push($this->returnData['errorMessages'], 
-                "Incorrect verification code"
-            );                        
+            array_push(static::$errorMessages, "Incorrect verification code");
+            return FALSE;                        
         }
     }
 
@@ -90,17 +106,18 @@ class User extends Utility{
     * user actions
     */
     public function login() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
         $_SESSION['eid'] = $this->userInfo['EID'];
+        $_SESSION['email'] = $this->email;
         $_SESSION['firstName'] = $this->userInfo['FirstName'];
-        $_SESSION['password'] = $this->userInfo['Password'];
+    }
+
+    public function logout() {
+        
     }
 
     public function sendVerificationCode() {
         mail(
-            $email,                         //recipient
+            $this->email,                         //recipient
             "SEEUS Verification Code",      //subject
             "Your verification code is: " . //message
                     $this->userInfo['VerificationCode']
@@ -108,25 +125,41 @@ class User extends Utility{
     }
 
     public function verifyEmail() {
-        $sql = "UPDATE users
+        $sql = 'UPDATE users
                 SET Verified = 1
-                WHERE Email = " . $email;
-        $this->dbConnection->query($sql);
+                WHERE EID = "' . $this->userInfo['EID'] . '"';
+        static::$dbConnection->query($sql);
     }
 
+    public function changePassword($newPassword) {
+        $sql = 'UPDATE users
+                SET Password = "' . $newPassword . '"
+                WHERE EID = "' . $_SESSION['eid'] . '"';
+        if (!static::$dbConnection->query($sql)) {
+            array_push(static::$errorMessages, "Could not change password");
+        }        
+    }
+
+    public static function changePhoneNumber($newPhoneNumber) {
+        $sql = 'UPDATE users
+                SET PhoneNumber = "' . $newPhoneNumber . '"
+                WHERE EID = "' . $_SESSION['eid'] . '"';
+        if (!static::$dbConnection->query($sql)) {
+            array_push(static::$errorMessages, "Could not change phone number");
+        }  
+    }
 
     /*
     * get functions
     */
-    public function getReturnData() {
-        return $this->returnData;
+    public static function getErrorMessages() {
+        $errorMessages = static::$errorMessages;
+        return $errorMessages;
     }
 
 
     /*
     * maintenance functions
     */
-    public function clearErrorMessages() {
-        $this->returnData['errorMessages'] = [];//clear out error messages        
-    }
+
 }

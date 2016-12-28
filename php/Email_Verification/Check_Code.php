@@ -1,17 +1,22 @@
 <?php
 session_start();
+require_once '../Class_Autoloader.php';
 
-$enteredCode = cleanInput($_POST['enteredCode']);
+$enteredCode = Utility::cleanInput($_POST['enteredCode']);
 
-$_SESSION['currentuser']->clearErrorMessages();
-$_SESSION['currentuser']->checkVerificationCode($_POST['enteredCode']);
+$currentUser = unserialize($_SESSION['currentUser']);
+$currentUser->verificationCodeCorrect($enteredCode);
 
-$returnData = $currentUser->getReturnData();
+$errorMessages = $currentUser::getErrorMessages();
 
-if ($returnData['verificationCodeCorrect']) {
-        $currentUser->verifyEmail();
-        $currentUser->login();
-        unset($_SESSION['currentuser']);
+if (count($errorMessages) == 0) {
+    $currentUser->verifyEmail();
+    $currentUser->login();
+    unset($_SESSION['currentUser']);
 }
+
+$returnData = [
+    "errorMessages"  => $errorMessages
+];
 
 echo json_encode($returnData);

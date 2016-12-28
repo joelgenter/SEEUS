@@ -10,22 +10,25 @@
     <div id="errorDivContainer">
         <div id="errorDiv"></div>
     </div>
-	<div>
+	<form>
 		&nbsp<input type="text" name="email" placeholder="Email">
 		<br>
 		&nbsp<input type="password" name="password" placeholder="Password">
 		<br>
 		<input type="submit" value="Login">
-	</div>
+	</form>
+    <button id="forgotPassword">Forgot Password</button>
 </div>
 
 <script>
     var $emailField = $('input[name="email"]'),
         $passwordField = $('input[name="password"]'),
-        $errorContainer = $('#errorDivContainer');
+        $errorContainer = $('#errorDivContainer'),
+        $forgotPasswordButton = $('#forgotPassword');
+        
 
-    $('input[value="Login"]').click(function() {
-        $.post(ajaxAddresses['login'], 
+    $('form').submit(function() {
+        $.post('php/Login.php', 
             {
                 email: $emailField.val(),
                 password: $passwordField.val()
@@ -33,27 +36,28 @@
         )
         .done(function(data) {
             $errorContainer.html(data);
-            data = JSON.parse(data);            
+            data = JSON.parse(data);  
             if (data.errorMessages.length == 0) {
-                if (data.emailRegistered & !data.emailVerified) {
-                    changeContent($contentContainer, navigation, 'email_verification');
+                if (!data.emailVerified) {
+                    userInterface.loadContent('email_verification');
                 }
                 else {
-                    getUserType(ajaxAddresses, function(data) {
-                        userType = data;
-                    });
-                    changeMenu($menuContainer, navigation, userType, $contentContainer);
-                    changeContent($contentContainer, navigation, 'home');
+                    userInterface.refreshMenu();
+                    userInterface.loadContent('home');
                 }
-            } else {  
+            } else {
                 $errorContainer.html(data.errorMessages);
             }
         })
         .fail(function() {
-            $errorContainer.text('Error connecting to server');
+            $errorContainer.html('Error connecting to server');
         });
+        return false;   //prevents refresh on form submit
     });
 
+    $forgotPasswordButton.on('click', function() {
+        userInterface.loadContent('forgotPassword');
+    })
 </script>
 </body>
 </html>
