@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Welcome to SEEUS</title>
-<link rel="stylesheet" type="text/css" href="css/content.css">
-</head>
-<body>
-<div id="pageTitle">Settings</div>
-<div id="focusDiv">
+<div id="viewTitle">Settings</div>
+<div id="viewContent">
     <div id="errorDivContainer">
         <div id="errorDiv"></div>
     </div>
-    <div id="subMenuDiv">
+    <div id="subMenu">
         <div id="addLocationButton" class="changeFormOption">Add Campus Location</div>
         <div id="deleteLocationButton" class="changeFormOption">Delete Campus Location</div>
         <div id="hoursOfOperationButton" class="changeFormOption">Change Hours of Operation</div>
@@ -79,7 +72,7 @@
         <div id="errorDiv"></div>
         <div id="successDiv"></div>
     </div>
-</div> <!--focusDiv-->
+</div> <!--viewContent-->
 
 
 <script>
@@ -209,6 +202,7 @@ $killswitch.on('click', function() {    //$activateDeactiveKillswitchContainer i
         }
     ).done(function() {
         updateKillswitchStatus();
+        userInterface.updateStatusDisplay();
     });
 });
 
@@ -257,17 +251,10 @@ $('form').submit(function() {
             $errorContainer.empty();
             $successContainer.html('Change was successful');
         } else { //there are error messages
-            var errorString = "";
-            for (var i = 0; i < errorMessages.length; i++) {
-                errorString += errorMessages[i] + '<br>';
-            }
             $successContainer.empty();
-            $errorContainer.html(errorString);
+            $errorContainer.html(userInterface.arrayToHTML(errorMessages));
         }
     });
     return false;   //prevents refresh on form submit
 });
-
 </script>
-</body>
-</html>

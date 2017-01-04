@@ -15,8 +15,4 @@ if (count($errorMessages) == 0) {
     unset($_SESSION['currentUser']);
 }
 
-$returnData = [
-    "errorMessages"  => $errorMessages
-];
-
-echo json_encode($returnData);
+echo json_encode($errorMessages);

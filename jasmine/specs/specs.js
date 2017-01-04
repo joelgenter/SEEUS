@@ -1,5 +1,5 @@
 describe("changeContent() should load content for", function() {
-    var $contentContainer = setFixtures('');
+    var $viewContainer = setFixtures('');
 
     var navigationObject = {
         existingPage: {
@@ -25,57 +25,57 @@ describe("changeContent() should load content for", function() {
     var pageName;
 
     beforeEach(function(){
-        $contentContainer.empty();
+        $viewContainer.empty();
     });
 
     describe('pages in the navigation object', function() {
         beforeEach(function(done) {
             pageName = 'existingPage';
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            changeContent($contentContainer, navigationObject, pageName);
+            changeContent($viewContainer, navigationObject, pageName);
         });
 
         it('', function() {
-            expect($contentContainer.text()).toEqual('existing_page is present');
+            expect($viewContainer.text()).toEqual('existing_page is present');
         });  
     });
     
     describe('pages not in the navigation object', function() {
         beforeEach(function(done) {
             pageName = 'nonExistentPage';
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            changeContent($contentContainer, navigationObject, pageName);
+            changeContent($viewContainer, navigationObject, pageName);
         });
 
         it('', function() {
-            expect($contentContainer.text()).toEqual('Page not found');
+            expect($viewContainer.text()).toEqual('Page not found');
         });  
     });
 
     describe('pages with a wrong url in the navigation object', function() {
         beforeEach(function(done) {
             pageName = 'pageWithWrongURL';
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            changeContent($contentContainer, navigationObject, pageName);
+            changeContent($viewContainer, navigationObject, pageName);
         });
 
         it('', function() {
-            expect($contentContainer.text()).toEqual('Page not found');
+            expect($viewContainer.text()).toEqual('Page not found');
         });  
     });
 
 });
 
 describe('changeMenu() should', function() {
-    var $menuContainer = setFixtures('');
+    var $menu = setFixtures('');
     
-    var $contentContainer = setFixtures('');
+    var $viewContainer = setFixtures('');
 
     var navigationObject = {
         pageForGuests: {
@@ -110,32 +110,32 @@ describe('changeMenu() should', function() {
     var userType;
 
     beforeEach(function(){
-        $menuContainer.empty();
-        $contentContainer.empty();
+        $menu.empty();
+        $viewContainer.empty();
     });
 
     describe('load only guest menu items for "guest" user type', function() {
         //call changeMenu() with the guest user type
         beforeEach(function(done) {
             userType = 'guest';
-            $menuContainer.on("DOMSubtreeModified", function() {
-                if ($menuContainer.text() != '') done();
+            $menu.on("DOMSubtreeModified", function() {
+                if ($menu.text() != '') done();
             });
-            changeMenu($menuContainer, navigationObject, userType, $contentContainer);
+            changeMenu($menu, navigationObject, userType, $viewContainer);
         });
 
         //simulate clicking 'Guest Page' li
         beforeEach(function(done) {
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            $menuContainer.children().trigger('click');
+            $menu.children().trigger('click');
         });
 
         it('', function() {
-            expect($contentContainer.text()).toBe('guest_page is present');
-            expect($menuContainer.html()).toContain('<li>Guest Page</li>');
-            expect($menuContainer.children().length).toBe(1);
+            expect($viewContainer.text()).toBe('guest_page is present');
+            expect($menu.html()).toContain('<li>Guest Page</li>');
+            expect($menu.children().length).toBe(1);
         }); 
     });
 
@@ -143,24 +143,24 @@ describe('changeMenu() should', function() {
         //call changeMenu() with the user user type
         beforeEach(function(done) {
             userType = 'user';
-            $menuContainer.on("DOMSubtreeModified", function() {
-                if ($menuContainer.text() != '') done();
+            $menu.on("DOMSubtreeModified", function() {
+                if ($menu.text() != '') done();
             });
-            changeMenu($menuContainer, navigationObject, userType, $contentContainer);
+            changeMenu($menu, navigationObject, userType, $viewContainer);
         });
 
         //simulate clicking 'User Page' li
         beforeEach(function(done) {
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            $menuContainer.children().trigger('click');
+            $menu.children().trigger('click');
         });
 
         it('', function() {
-            expect($contentContainer.text()).toBe('user_page is present');
-            expect($menuContainer.html()).toContain('<li>User Page</li>');
-            expect($menuContainer.children().length).toBe(1);
+            expect($viewContainer.text()).toBe('user_page is present');
+            expect($menu.html()).toContain('<li>User Page</li>');
+            expect($menu.children().length).toBe(1);
         }); 
     });
     
@@ -168,24 +168,24 @@ describe('changeMenu() should', function() {
         //call changeMenu() with the authoritarian user type
         beforeEach(function(done) {
             userType = 'authoritarian';
-            $menuContainer.on("DOMSubtreeModified", function() {
-                if ($menuContainer.text() != '') done();
+            $menu.on("DOMSubtreeModified", function() {
+                if ($menu.text() != '') done();
             });
-            changeMenu($menuContainer, navigationObject, userType, $contentContainer);
+            changeMenu($menu, navigationObject, userType, $viewContainer);
         });
 
         //simulate clicking 'Authoritarian Page' li
         beforeEach(function(done) {
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            $menuContainer.children().trigger('click');
+            $menu.children().trigger('click');
         });
 
         it('', function() {
-            expect($contentContainer.text()).toBe('authoritarian_page is present');
-            expect($menuContainer.html()).toContain('<li>Authoritarian Page</li>');
-            expect($menuContainer.children().length).toBe(1);
+            expect($viewContainer.text()).toBe('authoritarian_page is present');
+            expect($menu.html()).toContain('<li>Authoritarian Page</li>');
+            expect($menu.children().length).toBe(1);
         }); 
     });
 
@@ -193,24 +193,24 @@ describe('changeMenu() should', function() {
         //call changeMenu() with an unknown user type
         beforeEach(function(done) {
             userType = 'unrecognizedUserType';
-            $menuContainer.on("DOMSubtreeModified", function() {
-                if ($menuContainer.text() != '') done();
+            $menu.on("DOMSubtreeModified", function() {
+                if ($menu.text() != '') done();
             });
-            changeMenu($menuContainer, navigationObject, userType, $contentContainer);
+            changeMenu($menu, navigationObject, userType, $viewContainer);
         });
 
         //simulate clicking 'Guest Page' li
         beforeEach(function(done) {
-            $contentContainer.on("DOMSubtreeModified", function() {
-                if ($contentContainer.text() != '') done();
+            $viewContainer.on("DOMSubtreeModified", function() {
+                if ($viewContainer.text() != '') done();
             });
-            $menuContainer.children().trigger('click');
+            $menu.children().trigger('click');
         });
 
         it('', function() {
-            expect($contentContainer.text()).toBe('guest_page is present');
-            expect($menuContainer.html()).toContain('<li>Guest Page</li>');
-            expect($menuContainer.children().length).toBe(1);
+            expect($viewContainer.text()).toBe('guest_page is present');
+            expect($menu.html()).toContain('<li>Guest Page</li>');
+            expect($menu.children().length).toBe(1);
         }); 
     }); 
 

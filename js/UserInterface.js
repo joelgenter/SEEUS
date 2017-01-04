@@ -3,6 +3,7 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
     this.$contentElement = $contentElement;
     this.$menuElement = $menuElement;
     this.$statusElement = $statusElement;
+
     this.refreshTimer;
     this.updateStatusDisplayTimer;
 
@@ -13,8 +14,8 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
             displayName: 'Home',
             url: 'views/home.html',
             displayFor: {
-                authoritarian: true,
-                user: true,
+                authoritarian: false,
+                user: false,
                 guest: true
             }
         },
@@ -36,24 +37,6 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
                 guest: true
             }
         },
-        dispatch: {
-            displayName: 'Dispatch',
-            url: 'views/escorts/dispatch.html',
-            displayFor: {
-                authoritarian: true,
-                user: false,
-                guest: false
-            }
-        },
-        archive: {
-            displayName: 'Archive',
-            url: 'views/escorts/archive.html',
-            displayFor: {
-                authoritarian: true,
-                user: false,
-                guest: false
-            }
-        },
         request: {
             displayName: 'Request Escort',
             url: 'views/escorts/request.html',
@@ -63,9 +46,9 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
                 guest: false
             }
         },
-        escorts: {
-            displayName: 'Escorts',
-            url: 'views/escorts/user.html',
+        view_escorts: {
+            displayName: 'View Escorts',
+            url: 'views/escorts/view_escorts.html',
             displayFor: {
                 authoritarian: true,
                 user: true,
@@ -119,9 +102,10 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
 }
 
 UserInterface.prototype.loadContent = function(pageName) {
-    if (pageName in this.navigation)
+    if (pageName in this.navigation) {
         this.$contentElement.load(this.navigation[pageName].url);
-    else
+        //this.$menuElement look into child and give the class name 'active' to the id that's in pageName
+    } else
         $contentElement.html('Page not found');
 }
 
@@ -161,14 +145,14 @@ UserInterface.prototype.refreshMenu = function() {
         for (pageName in prototype.navigation) {
             if (prototype.navigation[pageName]['displayFor'][userType]) {
                 (function(pageName) {
-                    $newElement = $('<li>' + prototype.navigation[pageName]['displayName'] + '</li>');
+                    $newElement = $('<li id="' + pageName + '">' + prototype.navigation[pageName]['displayName'] + '</li>');
                     $newElement.on('click', function() {
                         prototype.loadContent(pageName)
                     });
                     prototype.$menuElement.append($newElement);  //improve performance by moving the final append outside of loop
                 })(pageName);
             }
-        }        
+        }
     })
 }
 
@@ -182,8 +166,16 @@ UserInterface.prototype.updateStatusDisplay = function() {
             isOnline = true;
         
         if (isOnline)
-            prototype.$statusElement.html('Status: Online');
+            prototype.$statusElement.html('Status: <span class="success">Online</span>');
         else
-            prototype.$statusElement.html('Status: Offline');
+            prototype.$statusElement.html('Status: <span class="error">Offline</span>');
     });
+}
+
+UserInterface.prototype.arrayToHTML = function(arrayOfStrings) {
+    var html = "";
+    for (var i = 0; i < arrayOfStrings.length; i++) {
+        html += arrayOfStrings[i] + '<br>';
+    }
+    return html;
 }

@@ -1,0 +1,50 @@
+@import url("layout.css"); 
+@import url("buttons.css"); 
+@import url("media.css"); 
+
+.error {
+    color: red;
+}
+.success {
+    color: lawngreen;
+}
+.instruction {
+    font-size: 15px;
+}
+body {
+    color: white;
+    font-family: monospace;
+    font-size: 20px;
+}
+table, th, td, tr {
+    font-size: 15px;
+    border-collapse: collapse;
+    border: 1px solid #ffd000;
+    margin: 10px;
+}
+table {
+    border-collapse: collapse;
+    border: 5px solid #ffd000;
+    width: 60%; 
+    border: 1px;
+}
+#subMenu {
+    margin:15px;
+    overflow: auto;
+}
+
+li {
+    display: block;
+    color: black; 
+    padding: 8px 0 8px 16px;
+    text-decoration: none;
+}
+li.active {             /*this isn't currently working*/
+    background-color: #4CAF50;
+    color: white;
+}
+li:hover:not(.active) {       
+    background-color: black;
+    color: white;
+    opacity: 1;
+}

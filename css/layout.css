@@ -1,0 +1,97 @@
+#leftPane {
+    position: absolute;
+    height: 100%;
+    width: 200px;
+    background-color: #ffd000;
+    border-radius: 25px;
+    border-radius: 10px 0px 0px 10px;
+}
+
+#rightBorder {         /*i might not need this*/
+    position: absolute;
+    height: 100%;
+    width: 50px;
+    border-radius: 0px 10px 10px 0px;
+    background-color: #ffd000;
+    opacity: .9;
+    right:0;
+}
+
+#main {
+    position: absolute;
+    background-color: black;
+    opacity: .9;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    width: 1100px;
+    height: 600px;
+    font-family: monospace;
+    border-radius: 10px 10px 10px 10px;
+    border-right: 50px solid #ffd000;
+}
+#viewTitle {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    text-align: center;
+    font-size: 30px;
+    height: 40px;
+    border-bottom: .25px solid #ffd000;
+    padding: 10px 0px 0px 0px;
+    font-weight: 600;
+}
+.viewMessage {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+    border: .25px solid #ffd000;
+    border-radius: 10px 10px 10px 10px;
+    font-size: 15px;
+    padding: 10px;
+}
+#viewContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: .25px solid #ffd000;
+    border-radius: 10px 10px 10px 10px;
+    text-align: center;
+    /*overflow: auto;*/
+}
+#errorDivContainer {
+    position: absolute;
+    height: 200px;
+    width: 400px;
+    bottom: -203px;
+}
+#errorDiv {
+    position: absolute;
+    top: 0;
+    color: red;
+    font-size: 15px;
+    text-align: left;
+}
+#viewContainer {
+    position: absolute;
+    left: 200px;
+    width: 850px;
+    height: 600px;
+}
+#menu {
+    position:absolute;
+    bottom: 10px;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    font-weight: 900;
+}
+#status {
+    position:absolute;
+    bottom:0px;
+    right: -205px;
+    width: 200px;
+}

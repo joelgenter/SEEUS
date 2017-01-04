@@ -1,0 +1,95 @@
+
+.homeButton {
+    font-size: 20px;
+    width: 150px;
+    height:100px;
+}
+
+.changeFormOption {
+    float: left;
+    font-size: 15px;
+    padding: 5px;
+    width: 120px;
+    font-weight: bold;
+    cursor: pointer;
+    border-bottom: 2px solid #ffd000;
+    background: black;
+    color: white;
+    /*box-sizing: border-box;*/
+}
+
+.changeFormOption:hover, #active {
+    background: #ffd000;
+    color: black;
+    font-weight: bold;
+}
+
+input[type=submit] {
+    margin: auto;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    background-color: black;
+    width: 200px;
+    border: none;
+    border-right: 2px solid #ffd000;
+    border-left: 2px solid #ffd000;
+    color: white;
+    padding: 16px 0px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: monospace;
+}
+button {
+    background-color: black;
+    margin: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: none;
+    border-right: 2px solid #ffd000;
+    border-left: 2px solid #ffd000;
+    color: white;
+    padding: 5px 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: monospace;
+}
+
+input[type=text],[type=password] {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px 5px;
+    border: none;
+    border-bottom: 1px solid #ffd000;
+    background-color: black;
+    color: white;
+}
+input[type=submit] {
+    margin: 5px;
+    background-color: black;
+    width: 200px;
+    border: none;
+    border-right: 2px solid #ffd000;
+    border-left: 2px solid #ffd000;
+    color: white;
+    padding: 16px 32px;
+    cursor: pointer;
+}
+
+input[type=text],[type=password] {
+    margin: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px 5px;
+    border: none;
+    border-bottom: 1px solid #ffd000;
+    background-color: black;
+    color: white;
+}
+
+#nextButton {
+    
+}
+
+#previousButton {
+
+}

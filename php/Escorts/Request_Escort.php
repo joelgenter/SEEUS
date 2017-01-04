@@ -49,8 +49,8 @@ else if (Data_Validation::serviceIsOnline()) {
                 ")";
 
         if (!Data_Validation::$dbConnection->query($sql)) {
-            array_push($errorMessages, $sql);
-            // array_push($errorMessages, "Server error");
+            // array_push($errorMessages, $sql);
+            array_push($errorMessages, "Server error");
         }
     }
 } else //service is offline

@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Welcome to SEEUS</title>
-<link rel="stylesheet" type="text/css" href="css/content.css">
-
-</head>
-<body>
-<div id="pageTitle">Register</div>
-<div id="focusDiv">
+<div id="viewTitle">Register</div>
+<div id="viewContent">
     <div id="errorDivContainer">
         <div id="errorDiv"></div>
     </div>
@@ -54,18 +46,12 @@
                 phoneNumber:     $phoneNumberField.val()
             }
         )
-        .done(function(data) {
-            $errorContainer.html(data);
-            data = JSON.parse(data);  
-            if (data.errorMessages.length == 0) {
+        .done(function(errorMessages) {
+            errorMessages = JSON.parse(errorMessages);  
+            if (errorMessages.length == 0) {
                 userInterface.loadContent('email_verification');
-            } else {
-                var errorString = "";
-                for (var i = 0; i < data.errorMessages.length; i++) {
-                    errorString += data.errorMessages[i] + '<br>';
-                }
-                $errorContainer.html(errorString);
-            }
+            } else
+                $errorContainer.html(userInterface.arrayToHTML(errorMessages));
         })
         .fail(function() {
             $errorContainer.html('Error connecting to server');
@@ -73,5 +59,3 @@
         return false;   //prevents refresh on form submit
     });
 </script>
-</body>
-</html>

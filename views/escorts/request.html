@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="../css/content.css">
-</head>
-<body>
-<div id="pageTitle">Request an Escort</div>
-<div id="focusDiv">
+<div id="viewTitle">Request an Escort</div>
+<div class="viewMessage">Submit the form below to request an escort.</div>
+<div id="viewContent">
     <div id="errorDivContainer">
         <div id="errorDiv"></div>
     </div>
@@ -16,11 +11,11 @@
             <option disabled selected>Location</option>
         </select><span class=error>*</span>
 		<br>
+		&nbsp&nbsp<input type="text" name="comments" maxlength="100" placeholder="Location Details">&nbsp
+		<br>
 		&nbsp&nbsp<select name="destination">
             <option disabled selected>Destination</option>
         </select><span class=error>*</span>
-		<br>
-		&nbsp&nbsp<input type="text" name="comments" maxlength="100" placeholder="Comments">&nbsp
 		<br>
 		&nbsp&nbsp<input type="text" name="phoneNumber" placeholder="Phone Number" maxlength="10" ><span class=error>*</span>
 		<br>
@@ -63,14 +58,9 @@ $('form').submit(function() {
         $errorContainer.html(errorMessages);           //testing
         errorMessages = JSON.parse(errorMessages);
         if (errorMessages.length == 0) {
-            userInterface.loadContent('escorts');
-        } else {
-            var errorString = "";
-            for (var i = 0; i < errorMessages.length; i++) {
-                errorString += errorMessages[i] + '<br>';
-            }
-            $errorContainer.html(errorString);
-        }
+            userInterface.loadContent('view_escorts');
+        } else
+            $errorContainer.html(userInterface.arrayToHTML(errorMessages));
     })
     .fail(function() {
         $errorContainer.html('Error connecting to server');
@@ -78,5 +68,3 @@ $('form').submit(function() {
     return false;   //prevents refresh on form submit
 });
 </script>
-</body>
-</html>

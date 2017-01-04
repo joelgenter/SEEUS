@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Welcome to SEEUS</title>
-<link rel="stylesheet" type="text/css" href="css/content.css">
-</head>
-<body>
-<div id="pageTitle">Email Verification</div>
-<div id="focusDiv">
+<div id="viewTitle">Email Verification</div>
+<div id="viewContent">
     <div id="errorDivContainer">
         <div id="errorDiv"></div>
     </div>
@@ -29,14 +22,13 @@ $('form').submit(function() {
             enteredCode: $verificationCodeField.val(),
         }
     )
-    .done(function(data) {
-        $errorContainer.html(data);
-        data = JSON.parse(data);
-        if (data.errorMessages.length == 0) {
+    .done(function(errorMessages) {
+        errorMessages = JSON.parse(errorMessages);
+        if (errorMessages.length == 0) {
             userInterface.refreshMenu();
             userInterface.loadContent('accountSettings');
         } else {
-            $errorContainer.html(data.errorMessages);
+            $errorContainer.html(errorMessages);
         }
     })
     .fail(function() {
@@ -45,5 +37,3 @@ $('form').submit(function() {
     return false; //prevents page refresh on form submit
 });
 </script>
-</body>
-</html>

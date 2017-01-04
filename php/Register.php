@@ -58,8 +58,4 @@ if (count($errorMessages) == 0) {
 
 }
 
-$returnData = [
-    "errorMessages" => $errorMessages
-];
-
-echo json_encode($returnData);
+echo json_encode($errorMessages);

@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="../css/content.css">
-</head>
-<body>
-<div id="pageTitle">Escorts</div>
-<div id="focusDiv"></div>
-<button id="previous">Previous</button>
-<button id="next">Next</button>
-<div id="testDiv"></div>
-
+<div id="viewTitle">Escorts</div>
+<div id="viewContent">
+    <table width="60%" border="1px"></table>
+    <button id="previousButton">Previous</button>
+    <button id="nextButton">Next</button>
+</div>
 <script>
     var MAX_ROWS = 3; 
     var startEscortNumber = 0;
@@ -27,19 +21,15 @@
     }
     resetRefreshTimer();
 
-    $focusDiv = $('#focusDiv');
-    $previousButton = $('#previous');
-    $nextButton = $('#next');
-    $testDiv = $('#testDiv');
+    var $tableContainer = $('table'),
+        $previousButton = $('#previousButton'),
+        $nextButton = $('#nextButton');
 
     $previousButton.on('click', function() {
         startEscortNumber -= MAX_ROWS;
         loadEscorts(startEscortNumber);
-        if (startEscortNumber <= 0)
-            $previousButton.hide();
         resetRefreshTimer();
     });
-    $previousButton.hide(); //hide when page loads because there'll be no previous page
 
     $nextButton.on('click', function() {
         startEscortNumber += MAX_ROWS;
@@ -52,32 +42,32 @@
     function loadEscorts(start) {
         $.post('php/Escorts/Get_Escorts.php',
             {
-                start:        start,
+                start:   start,
                 maxRows: MAX_ROWS
             }
         )
         .done(function(escortList) {
-            // $focusDiv.html(escortList);         //testing
             escortList = JSON.parse(escortList);
+            if (start <= 0)          //when displaying the first escorts
+                $previousButton.hide();          //hide the previous button
             if (escortList.length == 0)          //when no escorts are returned, hide next 
                 $nextButton.hide();              //button because there are no more escorts
             else if ($nextButton.is(':hidden'))     //if there are escorts and button is hidden
                 $nextButton.show();                 //show button
             var html = 
-                "<table width=\"60%\" border=\"1px\">" +
-                    "<tr>" +
-                        "<th>Last Modified</th>" +
-                        "<th>Location</th>" +
-                        "<th>Destination</th>" +
-                        "<th>First Name</th>" +
-                        "<th>Last Name</th>" +
-                        "<th>EID</th>" +
-                        "<th>Number in Party</th>" +
-                        "<th>Phone Number</th>" +
-                        "<th>Comments</th>" +
-                        "<th>Status</th>" +
-                    "</tr>"
-                $focusDiv.html(html);
+                "<tr>" +
+                    "<th>Last Modified</th>" +
+                    "<th>Location</th>" +
+                    "<th>Destination</th>" +
+                    "<th>First Name</th>" +
+                    "<th>Last Name</th>" +
+                    "<th>EID</th>" +
+                    "<th>Number in Party</th>" +
+                    "<th>Phone Number</th>" +
+                    "<th>Comments</th>" +
+                    "<th>Status</th>" +
+                "</tr>";
+                $tableContainer.html(html);
             for (var i = 0; i < escortList.length; i++) {
                 var buttons = '';
                 if (escortList[i].status == "Requested") {
@@ -101,10 +91,8 @@
                         "<td>" + escortList[i].comments         + "</td>" +
                         "<td>" + escortList[i].status + buttons + "</td>" +
                     "</tr>";
-                $focusDiv.append(html);
+                $tableContainer.append(html);
             }
-            html = "</table>";
-            $focusDiv.append(html);
         })
     }
     
@@ -122,6 +110,3 @@
         })
     }
 </script>
-
-</body>
-</html>
