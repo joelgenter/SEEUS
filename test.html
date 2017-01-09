@@ -1,30 +1,274 @@
 <head>
-<style>
-    .changeFormOption {
-    float: left;
-    font-size: 15px;
-    padding: 5px;
-    width: 120px;
-    font-weight: bold;
-    cursor: pointer;
-    border-bottom: 2px solid #ffd000;
-    background: black;
-    color: white;
-    /*box-sizing: border-box;*/
-}
-
-.changeFormOption:hover, #active {
-    background: #ffd000;
-    color: black;
-    font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <script src="jquery/jquery-3.1.0.min.js"></script>
+    <script src="js/UserInterface.js"></script>
 </head>
 
+<div id="viewTitle">Settings</div>
+<div id="viewContent">
+    <div id="errorDivContainer">
+        <div id="errorDiv"></div>
+    </div>
+    <!--<div id="subMenu">
+        <div id="addLocationButton" class="changeFormOption">Add Campus Location</div>
+        <div id="deleteLocationButton" class="changeFormOption">Delete Campus Location</div>
+        <div id="hoursOfOperationButton" class="changeFormOption">Change Hours of Operation</div>
+        <div id="activateDeactiveKillswitchButton" class="changeFormOption">Activate/Deactivate Killswitch</div>
+    </div>-->
 
-<body>
-    <div id="addLocationButton" class="changeFormOption">Add Campus Location</div>
-    <div id="deleteLocationButton" class="changeFormOption">Delete Campus Location</div>
-    <div id="hoursOfOperationButton" class="changeFormOption">Change Hours of Operation</div>
-    <div id="activateDeactiveKillswitchButton" class="changeFormOption">Activate/Deactivate Killswitch</div>
-</body>
+    <ul id="subMenu">
+        <li id="addLocationButton">Add Campus Location</li>
+        <li id="deleteLocationButton">Delete Campus Location</li>
+        <li id="hoursOfOperationButton">Change Hours of Operation</li>
+        <li id="activateDeactiveKillswitchButton">Activate/Deactivate Killswitch</li>
+    </ul>
+
+    <br>
+    <form> 
+        <div id="addLocationContainer">
+            <input type="text" name="locationToAdd" placeholder="Location to Add">
+        </div>
+        <div id="deleteLocationContainer">
+            <select name="locationToDelete">
+                <option disabled selected>Location to Delete</option>
+            </select><span class=error>*</span>
+        </div>
+        <div id="hoursOfOperationContainer">
+            <table>
+                <tr>
+                    <th>Day of Week</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+                <tr>
+                    <td>Sunday</td>
+                    <td><input type="time" name="sundayStart" /></td>
+                    <td><input type="time" name="sundayEnd" /></td>
+                </tr>
+                <tr>
+                    <td>Monday</td>
+                    <td><input type="time" name="mondayStart" /></td>
+                    <td><input type="time" name="mondayEnd" /></td>
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td><input type="time" name="tuesdayStart" /></td>
+                    <td><input type="time" name="tuesdayEnd" /></td>
+                </tr>
+                <tr>
+                    <td>Wednesday</td>
+                    <td><input type="time" name="wednesdayStart" /></td>
+                    <td><input type="time" name="wednesdayEnd" /></td>
+                </tr>
+                <tr>
+                    <td>Thursday</td>
+                    <td><input type="time" name="thursdayStart" /></td>
+                    <td><input type="time" name="thursdayEnd" /></td>
+                </tr>
+                <tr>
+                    <td>Friday</td>
+                    <td><input type="time" name="fridayStart" /></td>
+                    <td><input type="time" name="fridayEnd" /></td>
+                </tr>
+                <tr>
+                    <td>Saturday</td>
+                    <td><input type="time" name="saturdayStart" /></td>
+                    <td><input type="time" name="saturdayEnd" /></td>
+                </tr>
+            </table>
+        </div>
+        <div id="activateDeactiveKillswitchContainer">
+            <div id="killswitch" class="changeFormOption"></div>
+        </div>
+        <br> <input type="submit" value="Submit">
+    </form>
+    <div id="errorDivContainer">    <!-- should be renamed to something like message container-->
+        <div id="errorDiv"></div>
+        <div id="successDiv"></div>
+    </div>
+</div> <!--viewContent-->
+
+
+<script>
+//jQuery var declarations
+var $errorContainer   = $('#errorDiv'),
+    $successContainer = $('#successDiv'),
+    
+    //field containers
+    $addLocationContainer             = $('#addLocationContainer'),
+    $deleteLocationContainer          = $('#deleteLocationContainer'),
+    $hoursOfOperationContainer        = $('#hoursOfOperationContainer'),
+    $activateDeactiveKillswitchContainer = $('#activateDeactiveKillswitchContainer'),
+
+    //settings buttons
+    $submitButton                     = $('input[type="submit"]'),
+    $addLocationButton                = $('#addLocationButton'),
+    $deleteLocationButton             = $('#deleteLocationButton'),
+    $hoursOfOperationButton           = $('#hoursOfOperationButton'),
+    $activateDeactiveKillswitchButton = $('#activateDeactiveKillswitchButton'),
+
+    //fields
+    $locationToAddField    = $('input[name="locationToAdd"]'),
+
+    $locationToDeleteField = $('select[name="locationToDelete"]'),
+
+    $sundayStart           = $('input[name="sundayStart"]'),
+    $sundayEnd             = $('input[name="sundayEnd"]'),
+    $mondayStart           = $('input[name="mondayStart"]'),
+    $mondayEnd             = $('input[name="mondayEnd"]'),
+    $tuesdayStart          = $('input[name="tuesdayStart"]'),
+    $tuesdayEnd            = $('input[name="tuesdayEnd"]'),
+    $wednesdayStart        = $('input[name="wednesdayStart"]'),
+    $wednesdayEnd          = $('input[name="wednesdayEnd"]'),
+    $thursdayStart         = $('input[name="thursdayStart"]'),
+    $thursdayEnd           = $('input[name="thursdayEnd"]'),
+    $fridayStart           = $('input[name="fridayStart"]'),
+    $fridayEnd             = $('input[name="fridayEnd"]'),
+    $saturdayStart         = $('input[name="saturdayStart"]'),
+    $saturdayEnd           = $('input[name="saturdayEnd"]'),
+
+    $killswitch            = $('#killswitch');
+
+
+$.post('php/Get_Campus_Locations.php')
+.done(function(listOfLocations) {
+    listOfLocations = JSON.parse(listOfLocations);
+    userInterface.populateSelectOptions($locationToDeleteField, listOfLocations);
+});
+
+$.post('php/Get_Hours_Of_Operation.php')
+.done(function(hoursOfOperation) {
+    hoursOfOperation = JSON.parse(hoursOfOperation);
+    $sundayStart.val(hoursOfOperation.sundayStart);
+    $sundayEnd.val(hoursOfOperation.sundayEnd);
+    $mondayStart.val(hoursOfOperation.mondayStart);
+    $mondayEnd.val(hoursOfOperation.mondayEnd);
+    $tuesdayStart.val(hoursOfOperation.tuesdayStart);
+    $tuesdayEnd.val(hoursOfOperation.tuesdayEnd);
+    $wednesdayStart.val(hoursOfOperation.wednesdayStart);
+    $wednesdayEnd.val(hoursOfOperation.wednesdayEnd);
+    $thursdayStart.val(hoursOfOperation.thursdayStart);
+    $thursdayEnd.val(hoursOfOperation.thursdayEnd);
+    $fridayStart.val(hoursOfOperation.fridayStart);
+    $fridayEnd.val(hoursOfOperation.fridayEnd);
+    $saturdayStart.val(hoursOfOperation.saturdayStart);
+    $saturdayEnd.val(hoursOfOperation.saturdayEnd);
+});
+
+var killswitchIsActive;
+function updateKillswitchStatus() {
+    $.post('php/Get_Killswitch_Status.php')
+    .done(function(isActive) {
+        //converting php boolean to javascript boolean
+        if (isActive == 0) killswitchIsActive = false;
+        else killswitchIsActive = true;
+        
+        if (killswitchIsActive) {
+            $killswitch.id = "active";
+            $killswitch.html("Killswitch Status: Active");
+        } else {
+            $killswitch.removeAttr("id");
+            $killswitch.html("Killswitch Status: Inactive");
+        }
+    });
+}
+updateKillswitchStatus();
+
+function resetMenu($button, $container) {
+    $submitButton.show();
+    $addLocationButton.removeAttr("id");
+    $deleteLocationButton.removeAttr("id");
+    $hoursOfOperationButton.removeAttr("id");
+    $activateDeactiveKillswitchButton.removeAttr("id");
+    $addLocationContainer.hide();
+    $deleteLocationContainer.hide();
+    $hoursOfOperationContainer.hide();
+    $activateDeactiveKillswitchContainer.hide();
+    $errorContainer.empty();
+    $successContainer.empty();
+    $button.id = "active";
+    $container.show();
+}
+ 
+$addLocationButton.on('click', function() {
+    resetMenu(this, $addLocationContainer);
+});
+
+$deleteLocationButton.on('click', function() {
+    resetMenu(this, $deleteLocationContainer);
+});
+
+$hoursOfOperationButton.on('click', function() {
+    resetMenu(this, $hoursOfOperationContainer);
+});
+
+$activateDeactiveKillswitchButton.on('click', function() {
+    resetMenu(this, $activateDeactiveKillswitchContainer);
+    $submitButton.hide();
+});
+
+$addLocationButton.click();
+
+$killswitch.on('click', function() {    //$activateDeactiveKillswitchContainer is visible
+    $.post('php/Settings/Set_Killswitch_Status.php',
+        {
+            setToActive: !killswitchIsActive
+        }
+    ).done(function() {
+        updateKillswitchStatus();
+        userInterface.updateStatusDisplay();
+    });
+});
+
+/*
+* form submission
+*/
+$('form').submit(function() {
+    //setting url and data to send based on which fields are visible
+    if ($deleteLocationContainer.is(':visible')) {
+        var url = 'php/Settings/Delete_Campus_Location.php';
+        var dataToSend = {
+            campusLocationToDelete: $locationToDeleteField.val()
+        }
+    } else if ($addLocationContainer.is(':visible')) {
+        var url = 'php/Settings/Add_Campus_Location.php';
+        var dataToSend = {
+            campusLocationToAdd: $locationToAddField.val()
+        }
+    } else if ($hoursOfOperationContainer.is(':visible')) {
+        var url = 'php/Settings/Set_Hours_Of_Operation.php';
+        var dataToSend = {
+            sundayStart:    $sundayStart.val(),
+            sundayEnd:      $sundayEnd.val(),
+            mondayStart:    $mondayStart.val(),
+            mondayEnd:      $mondayEnd.val(),
+            tuesdayStart:   $tuesdayStart.val(),
+            tuesdayEnd:     $tuesdayEnd.val(),
+            wednesdayStart: $wednesdayStart.val(),
+            wednesdayEnd:   $wednesdayEnd.val(),
+            thursdayStart:  $thursdayStart.val(),
+            thursdayEnd:    $thursdayEnd.val(),
+            fridayStart:    $fridayStart.val(),
+            fridayEnd:      $fridayEnd.val(),
+            saturdayStart:  $saturdayStart.val(),
+            saturdayEnd:    $saturdayEnd.val()
+        }
+    } 
+    
+    //sending and receving the data
+    $.post(url, dataToSend)
+    .done(function(errorMessages) {
+        $errorContainer.html(errorMessages);        //testing
+            console.log(errorMessages);              //testing
+         errorMessages = JSON.parse(errorMessages);  
+        if (errorMessages.length == 0) {
+            $errorContainer.empty();
+            $successContainer.html('Change was successful');
+        } else { //there are error messages
+            $successContainer.empty();
+            $errorContainer.html(userInterface.arrayToHTML(errorMessages));
+        }
+    });
+    return false;   //prevents refresh on form submit
+});
+</script>

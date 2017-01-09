@@ -29,8 +29,12 @@ table {
     border: 1px;
 }
 #subMenu {
-    margin:15px;
-    overflow: auto;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    display:inline-block;
+    overflow: visible;
+    padding: 10px;
 }
 
 li {
@@ -39,11 +43,8 @@ li {
     padding: 8px 0 8px 16px;
     text-decoration: none;
 }
-li.active {             /*this isn't currently working*/
-    background-color: #4CAF50;
-    color: white;
-}
-li:hover:not(.active) {       
+
+li:hover, li.active {       
     background-color: black;
     color: white;
     opacity: 1;

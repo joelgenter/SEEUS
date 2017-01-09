@@ -104,7 +104,8 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
 UserInterface.prototype.loadContent = function(pageName) {
     if (pageName in this.navigation) {
         this.$contentElement.load(this.navigation[pageName].url);
-        //this.$menuElement look into child and give the class name 'active' to the id that's in pageName
+        this.$menuElement.children("li").removeAttr("class");
+        this.$menuElement.find("#" + pageName).attr("class", "active");
     } else
         $contentElement.html('Page not found');
 }

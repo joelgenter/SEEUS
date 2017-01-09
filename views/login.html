@@ -36,7 +36,12 @@
                 }
                 else {
                     userInterface.refreshMenu();
-                    userInterface.loadContent('home');
+                    userInterface.getUserType(function(userType) {
+                        if (userType == 'authoritarian')
+                            userInterface.loadContent('view_escorts');
+                        else if (userType == 'user')
+                            userInterface.loadContent('request');
+                    });
                 }
             } else {
                 $errorContainer.html(data.errorMessages);

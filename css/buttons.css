@@ -5,11 +5,12 @@
     height:100px;
 }
 
-.changeFormOption {
+#subMenu > li {
     float: left;
     font-size: 15px;
     padding: 5px;
-    width: 120px;
+    width: 160px;
+    height: 100%;
     font-weight: bold;
     cursor: pointer;
     border-bottom: 2px solid #ffd000;
@@ -18,7 +19,7 @@
     /*box-sizing: border-box;*/
 }
 
-.changeFormOption:hover, #active {
+.changeFormOption:hover, li#active, #subMenu > li:hover {
     background: #ffd000;
     color: black;
     font-weight: bold;
@@ -84,12 +85,4 @@ input[type=text],[type=password] {
     border-bottom: 1px solid #ffd000;
     background-color: black;
     color: white;
-}
-
-#nextButton {
-    
-}
-
-#previousButton {
-
 }
