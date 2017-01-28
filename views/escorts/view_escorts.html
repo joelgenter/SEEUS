@@ -17,7 +17,14 @@
     //used to set initial timer and reset it after clicking next and previous buttons
     function resetRefreshTimer() {
         clearInterval(userInterface.refreshTimer);
-        userInterface.refreshTimer = setInterval(function(){loadEscorts(0)}, 10000);
+        // startEscortNumber = 0;
+        userInterface.refreshTimer = setInterval(
+            function() {
+                startEscortNumber = 0;
+                loadEscorts(startEscortNumber);
+            }, 
+            10000
+        );
     }
     resetRefreshTimer();
 

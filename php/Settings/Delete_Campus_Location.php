@@ -6,12 +6,12 @@ Security::assertUserIs(['authoritarian']);
 
 $campusLocationToDelete  = Security::cleanInput($_POST['campusLocationToDelete']);
 
+$errorMessages = [];
+if (!preg_match("/[a-z0-9 ]/", $campusLocationToDelete)) {
+    
+}
 
 Utility::connectDB();
-
-
-
-$errorMessages = [];
 
 $sql = 'UPDATE campus_locations
         SET Enabled = 0

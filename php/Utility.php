@@ -112,6 +112,12 @@ class Utility {
     protected static $DB_USER = 'root';
     protected static $DB_PASS = '';
 
+    // #--000webhost Database Info--
+    // protected static $DB_NAME = 'id522857_seeusdb';
+    // protected static $DB_HOST = 'localhost';
+    // protected static $DB_USER = 'id522857_root';
+    // protected static $DB_PASS = 'testpass';
+
     #$DB_NAME = 'a6995183_SEEUS';
     #$DB_HOST = 'mysql7.000webhost.com';
     #$DB_USER = 'a6995183_Admin';

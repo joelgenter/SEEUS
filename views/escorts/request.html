@@ -1,8 +1,8 @@
 <div id="viewTitle">Request an Escort</div>
 <div class="viewMessage">Submit the form below to request an escort.</div>
 <div id="viewContent">
-    <div id="errorDivContainer">
-        <div id="errorDiv"></div>
+    <div id="responseContainer">
+        <div id="response"></div>
     </div>
 	<form>
 		&nbsp&nbsp<input type="text" name="numberInParty" placeholder="Number in Party"><span class=error>*</span>
@@ -29,7 +29,7 @@ var $numberInPartyField = $('input[name="numberInParty"]'),
     $destinationField   = $('select[name="destination"]'),
     $commentsField      = $('input[name="comments"]'),
     $phoneNumberField   = $('input[name="phoneNumber"]'),
-    $errorContainer     = $('#errorDiv');
+    $response           = $('#response');
 
 //to populate phone number field with current phone number
 $.post('php/Get_Phone_Number.php')
@@ -55,15 +55,15 @@ $('form').submit(function() {
         }
     )
     .done(function(errorMessages) {
-        $errorContainer.html(errorMessages);           //testing
+        $response.html(errorMessages);           //testing
         errorMessages = JSON.parse(errorMessages);
         if (errorMessages.length == 0) {
             userInterface.loadContent('view_escorts');
         } else
-            $errorContainer.html(userInterface.arrayToHTML(errorMessages));
+            $response.html(userInterface.arrayToHTML(errorMessages));
     })
     .fail(function() {
-        $errorContainer.html('Error connecting to server');
+        $response.html('Error connecting to server');
     });
     return false;   //prevents refresh on form submit
 });

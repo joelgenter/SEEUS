@@ -1,0 +1,54 @@
+.homeButton {
+    font-size: 20px;
+    width: 150px;
+    height:100px;
+}
+
+
+/*submenu buttons*/
+#subMenu > li {
+    float: left;
+    font-size: 15px;
+    padding: 5px;
+    width: 160px;
+    height: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    border-bottom: 2px solid #ffd000;
+    background: black;
+    color: white;
+    /*box-sizing: border-box;*/
+}
+
+#subMenu > li.active, #subMenu > li:hover {
+    background: #ffd000;
+    color: black;
+    font-weight: bold;
+}
+
+input[type=submit] {
+    margin: 15px;
+    background-color: black;
+    width: 200px;
+    border: none;
+    border-right: 2px solid #ffd000;
+    border-left: 2px solid #ffd000;
+    color: white;
+    padding: 16px 32px;
+    cursor: pointer;
+    font-size: 17px;
+    font-family: monospace;
+}
+
+button {
+    background-color: black;
+    margin: 5px;
+    border: none;
+    border-right: 2px solid #ffd000;
+    border-left: 2px solid #ffd000;
+    color: white;
+    padding: 5px 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: monospace;
+}

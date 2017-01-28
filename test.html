@@ -164,7 +164,7 @@ function updateKillswitchStatus() {
         else killswitchIsActive = true;
         
         if (killswitchIsActive) {
-            $killswitch.id = "active";
+            $killswitch.attr("class", "active");
             $killswitch.html("Killswitch Status: Active");
         } else {
             $killswitch.removeAttr("id");
@@ -186,7 +186,7 @@ function resetMenu($button, $container) {
     $activateDeactiveKillswitchContainer.hide();
     $errorContainer.empty();
     $successContainer.empty();
-    $button.id = "active";
+    $button.attr("class", "active");
     $container.show();
 }
  

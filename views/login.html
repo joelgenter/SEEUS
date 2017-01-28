@@ -1,7 +1,7 @@
 <div id="viewTitle">Login</div>
 <div id="viewContent">
-    <div id="errorDivContainer">
-        <div id="errorDiv"></div>
+    <div id="responseContainer">
+        <div id="response"></div>
     </div>
 	<form>
 		&nbsp<input type="text" name="email" placeholder="Email">
@@ -16,7 +16,7 @@
 <script>
     var $emailField = $('input[name="email"]'),
         $passwordField = $('input[name="password"]'),
-        $errorContainer = $('#errorDivContainer'),
+        $response = $('#response'),
         $forgotPasswordButton = $('#forgotPassword');
         
 
@@ -28,7 +28,7 @@
             }
         )
         .done(function(data) {
-            $errorContainer.html(data);
+            $response.html(data);
             data = JSON.parse(data);  
             if (data.errorMessages.length == 0) {
                 if (!data.emailVerified) {
@@ -44,11 +44,11 @@
                     });
                 }
             } else {
-                $errorContainer.html(data.errorMessages);
+                $response.html(data.errorMessages);
             }
         })
         .fail(function() {
-            $errorContainer.html('Error connecting to server');
+            $response.html('Error connecting to server');
         });
         return false;   //prevents refresh on form submit
     });

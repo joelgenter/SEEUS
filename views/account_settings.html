@@ -1,14 +1,14 @@
 <div id="viewTitle">Settings</div>
 <div id="viewContent">
-    <div id="errorDivContainer">
+    <div id="responseContainer">
         <div id="errorDiv"></div>
     </div>
     <ul id="subMenu">
-        <li id="passwordButton" class="changeFormOption" >Password</li>
-        <li id="phoneNumberButton" class="changeFormOption" >Phone Number</li>
+        <li id="passwordButton">Change Password</li>
+        <li id="phoneNumberButton">Change Phone Number</li>
     </ul>
     <br>
-    <form> 
+    <form>
         <div id="passwordFieldContainer">
             &nbsp<input type="password" placeholder="Current Password" name="currentPassword">
             <br>
@@ -21,17 +21,15 @@
         </div>
         <br> <input type="submit" value="Submit">
     </form>
-    <div id="errorDivContainer">    <!-- should be renamed to something like message container-->
-        <div id="errorDiv"></div>
-        <div id="successDiv"></div>
+    <div id="responseContainer">    <!-- should be renamed to something like message container-->
+        <div id="response"></div>
     </div>
 </div> <!--viewContent-->
 
 
 <script>
 //jQuery var declarations
-var $errorContainer   = $('#errorDiv'),
-    $successContainer = $('#successDiv'),
+var $response   = $('#response'),
     
     //field containers
     $passwordFieldContainer = $('#passwordFieldContainer'),
@@ -48,21 +46,19 @@ var $errorContainer   = $('#errorDiv'),
     $newPhoneNumber  = $('input[name="newPhoneNumber"]');
 
 $passwordButton.on('click', function() {
-    this.id = "active";
+    $passwordButton.attr("class", "active");
     $phoneNumberButton.removeAttr("id");
     $phoneNumberContainer.hide();
     $passwordFieldContainer.show();
-    $errorContainer.empty();
-    $successContainer.empty();
+    $response.empty();
 });
 
 $phoneNumberButton.on('click', function() {
-    this.id = "active";
+    $phoneNumberButton.attr("class", "active");
     $passwordButton.removeAttr("id");
     $passwordFieldContainer.hide();
     $phoneNumberContainer.show();
-    $errorContainer.empty();
-    $successContainer.empty();
+    $response.empty();
 });
 
 //populate phone number field with current phone number
@@ -77,7 +73,6 @@ $passwordButton.click();
 * form submission
 */
 $('form').submit(function() {
-
     //setting url and data to send based on which fields are visible
     if ($passwordFieldContainer.is(':visible')) {
         var url = 'php/Settings/Change_Password.php';
@@ -96,16 +91,16 @@ $('form').submit(function() {
     //sending and receving the data
     $.post(url, dataToSend)
     .done(function(errorMessages) {
-        $errorContainer.html(errorMessages);        //testing
+        alert('hello');
+        $response.html(errorMessages);        //testing
         errorMessages = JSON.parse(errorMessages);  
-        if (errorMessages.length == 0) {
-            $errorContainer.empty();
-            $successContainer.html('Change was successful');
-        } else { //there are error messages
-            $successContainer.empty();
-            $errorContainer.html(userInterface.arrayToHTML(errorMessages));
-        }
+            $response.empty();
+        if (errorMessages.length == 0)
+            $response.html('Change was successful');
+        else  //there are error messages
+            $response.html(userInterface.arrayToHTML(errorMessages));
     });
+    
     return false;   //prevents refresh on form submit
 });
 </script>

@@ -1,0 +1,66 @@
+@import "_layout"; 
+@import "_buttons"; 
+@import "_media"; 
+
+.error {
+    color: red;
+}
+
+.success {
+    color: lawngreen;
+}
+
+.instruction {
+    font-size: 15px;
+}
+
+body {
+    color: white;
+    font-family: monospace;
+    font-size: 20px;
+}
+
+input[type=text],[type=password] {
+    margin: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px 5px;
+    border: none;
+    border-bottom: 1px solid #ffd000;
+    background-color: black;
+    color: white;
+}
+
+table, th, td, tr {
+    font-size: 15px;
+    border-collapse: collapse;
+    border: 1px solid #ffd000;
+    margin: 10px;
+}
+table {
+    border-collapse: collapse;
+    border: 5px solid #ffd000;
+    width: 60%; 
+    border: 1px;
+}
+#subMenu {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    display:inline-block;
+    overflow: visible;
+    padding: 10px;
+}
+
+li {
+    display: block;
+    color: black; 
+    padding: 8px 0 8px 16px;
+    text-decoration: none;
+}
+
+li:hover, li.active {       
+    background-color: black;
+    color: white;
+    opacity: 1;
+}
