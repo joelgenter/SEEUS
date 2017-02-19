@@ -28,7 +28,6 @@
             }
         )
         .done(function(data) {
-            $response.html(data);
             data = JSON.parse(data);  
             if (data.errorMessages.length == 0) {
                 if (!data.emailVerified) {

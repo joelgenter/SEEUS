@@ -1,7 +1,7 @@
 <div id="viewTitle">Email Verification</div>
 <div id="viewContent">
-    <div id="errorDivContainer">
-        <div id="errorDiv"></div>
+    <div id="responseContainer">
+        <div id="response"></div>
     </div>
 	<form>
 		&nbsp<input type="text" name="verificationCode" placeholder="Verification Code">
@@ -14,7 +14,7 @@
 
 <script>
 var $verificationCodeField = $('input[name="verificationCode"]'),
-    $errorContainer = $('#errorDivContainer');
+    $response = $('#response');
 
 $('form').submit(function() {
     $.post('php/Email_Verification/Check_Code.php', 
@@ -28,11 +28,11 @@ $('form').submit(function() {
             userInterface.refreshMenu();
             userInterface.loadContent('accountSettings');
         } else {
-            $errorContainer.html(errorMessages);
+            $response.html(errorMessages);
         }
     })
     .fail(function() {
-        $errorContainer.html('Error connecting to server');
+        $response.html('Error connecting to server');
     });
     return false; //prevents page refresh on form submit
 });

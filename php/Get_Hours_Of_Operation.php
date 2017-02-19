@@ -20,7 +20,7 @@ function calculateEndTime($startTime, $duration) {
 }
 
 $hoursOfOperation = [];
-while($row = mysqli_fetch_assoc($sqlResult)){
+while($row = mysqli_fetch_assoc($sqlResult)) {
     switch($row['DayOfWeek']) {
         case 'Sunday':
             $hoursOfOperation['sundayStart'] = $row['StartTime'];

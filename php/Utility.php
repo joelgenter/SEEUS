@@ -40,15 +40,14 @@ class Utility {
 
     public static function serviceIsOnline() {
         $serviceIsOnline = TRUE;
-        if (static::killswitchIsActive())
+        if (static::killswitchIsActive()) {
             $serviceIsOnline = FALSE;
-        else {
+        } else {
             //get days of week and dates for yesterday and today
             $dayOfWeekYesterday = date('l', strtotime("-1 days"));
             $dayOfWeekToday     = date('l');
             $dateYesterday      = date('m/d/Y', strtotime("-1 days"));
             $dateToday          = date('m/d/Y');
-
             $sql = 
                 'SELECT
                     DayOfWeek,
@@ -79,7 +78,8 @@ class Utility {
             $yesterdayShiftEnd = strtotime($dateYesterday . " " . $startTimeYesterday . " + " . $durationYesterday . " minutes");
             $todayShiftStart   = strtotime($dateToday . " " . $startTimeToday);
             $todayShiftEnd     = strtotime($dateToday . " " . $startTimeToday . " + " . $durationToday . " minutes");
-
+            return "now: $now\nyesterdayShiftEnd: $yesterdayShiftEnd\nnow >= yesterdayShiftEnd: " . ($now < $yesterdayShiftEnd); //testing
+            
             if (
                 !($now < $yesterdayShiftEnd) &&    //the shift that started yesterday has ended
                 !($todayShiftStart < $now && $now < $todayShiftEnd)  //the shift that started today is not running
@@ -87,7 +87,7 @@ class Utility {
                 $serviceIsOnline = FALSE;
             }
         }
-        // return "now: $now\nyesterdayShiftEnd: $yesterdayShiftEnd\nnow >= yesterdayShiftEnd: " . !($now < $yesterdayShiftEnd);
+        // return "now: $now\nyesterdayShiftEnd: $yesterdayShiftEnd\nnow >= yesterdayShiftEnd: " . !($now < $yesterdayShiftEnd); //testing
         return $serviceIsOnline;
     }
 

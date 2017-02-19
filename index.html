@@ -25,9 +25,9 @@
 <script src="jquery/jquery-3.1.0.min.js"></script>
 <script src="js/UserInterface.js"></script>
 <script>  
-    var $menu    = $('#menu'),
-        $viewContainer = $('#viewContainer'),
-        $statusContainer  = $('#status');
+    var $menu            = $('#menu'),
+        $viewContainer   = $('#viewContainer'),
+        $statusContainer = $('#status');
     
     var userInterface = new UserInterface($viewContainer, $menu, $statusContainer);
 
@@ -41,9 +41,9 @@
             userInterface.loadContent('home');
         else
             userInterface.loadContent('view_escorts');
-    })
-    if (userInterface.getUserType)
-        userInterface.loadContent('home');
+    });
+    // if (userInterface.getUserType)
+    //     userInterface.loadContent('home');
 </script>
 </body>
 </html>

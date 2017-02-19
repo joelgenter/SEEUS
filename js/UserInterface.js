@@ -161,15 +161,17 @@ UserInterface.prototype.updateStatusDisplay = function() {
     var prototype = this;
     $.post('php/Get_Status.php')
     .done(function(isOnline) {
-        if (isOnline == 0) 
-            isOnline = false;
-        else 
-            isOnline = true;
+        // prototype.$statusElement.html(isOnline);            //testing
+        // console.log(isOnline);                              //testing
+        // if (isOnline == 0)
+        //     isOnline = false;
+        // else 
+        //     isOnline = true;
         
-        if (isOnline)
-            prototype.$statusElement.html('Status: <span class="success">Online</span>');
-        else
-            prototype.$statusElement.html('Status: <span class="error">Offline</span>');
+        // if (isOnline)
+        //     prototype.$statusElement.html('Status: <span class="success">Online</span>');
+        // else
+        //     prototype.$statusElement.html('Status: <span class="error">Offline</span>');
     });
 }
 
@@ -179,4 +181,16 @@ UserInterface.prototype.arrayToHTML = function(arrayOfStrings) {
         html += arrayOfStrings[i] + '<br>';
     }
     return html;
+}
+
+UserInterface.prototype.writeErrorResponse = function($responseElement, message) {
+    $responseElement.removeAttr("class");
+    $responseElement.attr("class", "error");
+    $responseElement.html(message);
+}
+
+UserInterface.prototype.writeSuccessResponse = function($responseElement, message) {
+    $responseElement.removeAttr("class");
+    $responseElement.attr("class", "success");
+    $responseElement.html(message);
 }

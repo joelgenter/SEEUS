@@ -1,7 +1,7 @@
 <div id="viewTitle">Register</div>
 <div id="viewContent">
-    <div id="errorDivContainer">
-        <div id="errorDiv"></div>
+    <div id="responseContainer">
+        <div id="response"></div>
     </div>
 	<form>
 		&nbsp&nbsp<input value="joseph@emich.edu" type="text" name="email" placeholder="Email"><span class=error>*</span>
@@ -20,8 +20,6 @@
 		<br>
 		<input type="submit" value="Register">
 	</form>
-    <div id="errorDiv">
-    </div>
 </div>
 
 <script>
@@ -32,7 +30,7 @@
         $lastNameField        = $('input[name="lastName"]'),
         $eidField             = $('input[name="eid"]'),
         $phoneNumberField     = $('input[name="phoneNumber"]'),
-        $errorContainer       = $('#errorDivContainer');
+        $response             = $('#response');
     
     $('form').submit(function() {
         $.post('php/Register.php', 
@@ -51,10 +49,10 @@
             if (errorMessages.length == 0) {
                 userInterface.loadContent('email_verification');
             } else
-                $errorContainer.html(userInterface.arrayToHTML(errorMessages));
+                $response.html(userInterface.arrayToHTML(errorMessages));
         })
         .fail(function() {
-            $errorContainer.html('Error connecting to server');
+            $response.html('Error connecting to server');
         });
         return false;   //prevents refresh on form submit
     });

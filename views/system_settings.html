@@ -1,14 +1,8 @@
 <div id="viewTitle">Settings</div>
 <div id="viewContent">
-    <div id="errorDivContainer">
-        <div id="errorDiv"></div>
+    <div id="responseContainer">
+        <div id="response"></div>
     </div>
-    <!--<div id="subMenu">
-        <div id="addLocationButton" class="changeFormOption">Add Campus Location</div>
-        <div id="deleteLocationButton" class="changeFormOption">Delete Campus Location</div>
-        <div id="hoursOfOperationButton" class="changeFormOption">Change Hours of Operation</div>
-        <div id="activateDeactiveKillswitchButton" class="changeFormOption">Activate/Deactivate Killswitch</div>
-    </div>-->
 
     <ul id="subMenu">
         <li id="addLocationButton">Add Campus<br>Location</li>
@@ -76,17 +70,12 @@
         </div>
         <br> <input type="submit" value="Submit">
     </form>
-    <div id="errorDivContainer">    <!-- should be renamed to something like message container-->
-        <div id="errorDiv"></div>
-        <div id="successDiv"></div>
-    </div>
 </div> <!--viewContent-->
 
 
 <script>
 //jQuery var declarations
-var $errorContainer   = $('#errorDiv'),
-    $successContainer = $('#successDiv'),
+var $response = $('#response'),
     
     //field containers
     $addLocationContainer             = $('#addLocationContainer'),
@@ -170,34 +159,33 @@ updateKillswitchStatus();
 
 function resetMenu($button, $container) {
     $submitButton.show();
-    $addLocationButton.removeAttr("id");
-    $deleteLocationButton.removeAttr("id");
-    $hoursOfOperationButton.removeAttr("id");
-    $activateDeactiveKillswitchButton.removeAttr("id");
+    $addLocationButton.removeAttr("class");
+    $deleteLocationButton.removeAttr("class");
+    $hoursOfOperationButton.removeAttr("class");
+    $activateDeactiveKillswitchButton.removeAttr("class");
     $addLocationContainer.hide();
     $deleteLocationContainer.hide();
     $hoursOfOperationContainer.hide();
     $activateDeactiveKillswitchContainer.hide();
-    $errorContainer.empty();
-    $successContainer.empty();
+    $response.empty();
     $button.attr("class", "active");
     $container.show();
 }
  
 $addLocationButton.on('click', function() {
-    resetMenu(this, $addLocationContainer);
+    resetMenu($(this), $addLocationContainer);
 });
 
 $deleteLocationButton.on('click', function() {
-    resetMenu(this, $deleteLocationContainer);
+    resetMenu($(this), $deleteLocationContainer);
 });
 
 $hoursOfOperationButton.on('click', function() {
-    resetMenu(this, $hoursOfOperationContainer);
+    resetMenu($(this), $hoursOfOperationContainer);
 });
 
 $activateDeactiveKillswitchButton.on('click', function() {
-    resetMenu(this, $activateDeactiveKillswitchContainer);
+    resetMenu($(this), $activateDeactiveKillswitchContainer);
     $submitButton.hide();
 });
 
@@ -252,16 +240,12 @@ $('form').submit(function() {
     //sending and receving the data
     $.post(url, dataToSend)
     .done(function(errorMessages) {
-        $errorContainer.html(errorMessages);        //testing
-            console.log(errorMessages);              //testing
-         errorMessages = JSON.parse(errorMessages);  
-        if (errorMessages.length == 0) {
-            $errorContainer.empty();
-            $successContainer.html('Change was successful');
-        } else { //there are error messages
-            $successContainer.empty();
-            $errorContainer.html(userInterface.arrayToHTML(errorMessages));
-        }
+        errorMessages = JSON.parse(errorMessages);  
+        $response.empty();
+        if (errorMessages.length == 0)
+            userInterface.writeSuccessResponse($response, 'Change was successful');
+        else //there are error messages
+            userInterface.writeErrorResponse($response, userInterface.arrayToHTML(errorMessages));
     });
     return false;   //prevents refresh on form submit
 });

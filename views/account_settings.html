@@ -1,7 +1,7 @@
 <div id="viewTitle">Settings</div>
 <div id="viewContent">
     <div id="responseContainer">
-        <div id="errorDiv"></div>
+        <div id="response"></div>
     </div>
     <ul id="subMenu">
         <li id="passwordButton">Change Password</li>
@@ -47,7 +47,7 @@ var $response   = $('#response'),
 
 $passwordButton.on('click', function() {
     $passwordButton.attr("class", "active");
-    $phoneNumberButton.removeAttr("id");
+    $phoneNumberButton.removeAttr("class");
     $phoneNumberContainer.hide();
     $passwordFieldContainer.show();
     $response.empty();
@@ -55,7 +55,7 @@ $passwordButton.on('click', function() {
 
 $phoneNumberButton.on('click', function() {
     $phoneNumberButton.attr("class", "active");
-    $passwordButton.removeAttr("id");
+    $passwordButton.removeAttr("class");
     $passwordFieldContainer.hide();
     $phoneNumberContainer.show();
     $response.empty();
@@ -91,14 +91,12 @@ $('form').submit(function() {
     //sending and receving the data
     $.post(url, dataToSend)
     .done(function(errorMessages) {
-        alert('hello');
-        $response.html(errorMessages);        //testing
         errorMessages = JSON.parse(errorMessages);  
             $response.empty();
         if (errorMessages.length == 0)
-            $response.html('Change was successful');
+            userInterface.writeSuccessResponse($response, 'Change was successful');
         else  //there are error messages
-            $response.html(userInterface.arrayToHTML(errorMessages));
+            userInterface.writeErrorResponse($response, userInterface.arrayToHTML(errorMessages));
     });
     
     return false;   //prevents refresh on form submit

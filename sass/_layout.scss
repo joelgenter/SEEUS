@@ -69,16 +69,15 @@
     text-align: center;
     /*overflow: auto;*/
 }
-#errorDivContainer {
+#responseContainer {
     position: absolute;
     height: 200px;
     width: 400px;
     bottom: -203px;
 }
-#errorDiv {
+#response {
     position: absolute;
     top: 0;
-    color: red;
     font-size: 15px;
     text-align: left;
 }
