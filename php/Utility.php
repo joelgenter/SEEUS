@@ -78,8 +78,13 @@ class Utility {
             $yesterdayShiftEnd = strtotime($dateYesterday . " " . $startTimeYesterday . " + " . $durationYesterday . " minutes");
             $todayShiftStart   = strtotime($dateToday . " " . $startTimeToday);
             $todayShiftEnd     = strtotime($dateToday . " " . $startTimeToday . " + " . $durationToday . " minutes");
-            return "now: $now\nyesterdayShiftEnd: $yesterdayShiftEnd\nnow >= yesterdayShiftEnd: " . ($now < $yesterdayShiftEnd); //testing
+
+
+            // //TESTING
+            // return "now: ". date("m/d/Y H:i:s", $now) . "\nyesterdayShiftEnd: " . date("m/d/Y H:i:s", $yesterdayShiftEnd) . "\now >= yesterdayShiftEnd: " . ($now < $yesterdayShiftEnd); //testing 
+            // //TESTING
             
+
             if (
                 !($now < $yesterdayShiftEnd) &&    //the shift that started yesterday has ended
                 !($todayShiftStart < $now && $now < $todayShiftEnd)  //the shift that started today is not running
@@ -87,7 +92,6 @@ class Utility {
                 $serviceIsOnline = FALSE;
             }
         }
-        // return "now: $now\nyesterdayShiftEnd: $yesterdayShiftEnd\nnow >= yesterdayShiftEnd: " . !($now < $yesterdayShiftEnd); //testing
         return $serviceIsOnline;
     }
 

@@ -181,7 +181,7 @@ body {
   font-family: monospace;
   font-size: 20px; }
 
-input[type=text], [type=password] {
+input[type=text], [type=password], select {
   margin: 5px;
   margin-left: 10px;
   margin-right: 10px;
@@ -190,6 +190,9 @@ input[type=text], [type=password] {
   border-bottom: 1px solid #ffd000;
   background-color: black;
   color: white; }
+
+select {
+  width: 179px; }
 
 table, th, td, tr {
   font-size: 15px;

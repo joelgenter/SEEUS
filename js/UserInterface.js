@@ -163,15 +163,15 @@ UserInterface.prototype.updateStatusDisplay = function() {
     .done(function(isOnline) {
         // prototype.$statusElement.html(isOnline);            //testing
         // console.log(isOnline);                              //testing
-        // if (isOnline == 0)
-        //     isOnline = false;
-        // else 
-        //     isOnline = true;
+        if (isOnline == 0)
+            isOnline = false;
+        else 
+            isOnline = true;
         
-        // if (isOnline)
-        //     prototype.$statusElement.html('Status: <span class="success">Online</span>');
-        // else
-        //     prototype.$statusElement.html('Status: <span class="error">Offline</span>');
+        if (isOnline)
+            prototype.$statusElement.html('Status: <span class="success">Online</span>');
+        else
+            prototype.$statusElement.html('Status: <span class="error">Offline</span>');
     });
 }
 
