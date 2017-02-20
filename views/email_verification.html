@@ -28,11 +28,11 @@ $('form').submit(function() {
             userInterface.refreshMenu();
             userInterface.loadContent('accountSettings');
         } else {
-            $response.html(errorMessages);
+            userInterface.writeErrorResponse($response, errorMessages);
         }
     })
     .fail(function() {
-        $response.html('Error connecting to server');
+        userInterface.writeErrorResponse($response, 'Error connecting to server');
     });
     return false; //prevents page refresh on form submit
 });

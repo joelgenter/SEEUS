@@ -63,13 +63,10 @@ $('form').submit(function() {
                 $response, 
                 userInterface.arrayToHTML(errorMessages)
             );
-            // $response.html(userInterface.arrayToHTML(errorMessages));
-            // $response.removeAttr("class");
-            // $response.attr("class", "error");
         
     })
     .fail(function() {
-        $response.html('Error connecting to server');
+        userInterface.writeErrorResponse($response, 'Error connecting to server');
     });
     return false;   //prevents refresh on form submit
 });

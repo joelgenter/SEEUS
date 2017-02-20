@@ -43,11 +43,11 @@
                     });
                 }
             } else {
-                $response.html(data.errorMessages);
+                userInterface.writeErrorResponse($response, data.errorMessages);
             }
         })
         .fail(function() {
-            $response.html('Error connecting to server');
+            userInterface.writeErrorResponse($response, 'Error connecting to server');
         });
         return false;   //prevents refresh on form submit
     });
