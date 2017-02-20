@@ -181,7 +181,7 @@ body {
   font-family: monospace;
   font-size: 20px; }
 
-input[type=text], [type=password], select {
+input[type=text], [type=password], [type=time], select {
   margin: 5px;
   margin-left: 10px;
   margin-right: 10px;
@@ -193,6 +193,11 @@ input[type=text], [type=password], select {
 
 select {
   width: 179px; }
+
+[type=time] {
+  margin: 0;
+  border: none;
+  width: 60px; }
 
 table, th, td, tr {
   font-size: 15px;
