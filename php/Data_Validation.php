@@ -117,11 +117,19 @@ class Data_Validation extends Utility{
         }
     }
 
-    public static function checkComments($comments) {
+    public static function checkPickUpPoint($location, $pickUpPoint) {
+        $sql = 
+            "SELECT 1
+            FROM pick_up_points, campus_locations
+            WHERE pick_up_points.Name = '$pickUpPoint'
+            AND campus_locations.Name = '$location'
+            AND pick_up_points.LocationID = campus_locations.ID";
         
-        if (!empty($comments) && strlen($comments) > 100)
-            array_push(static::$errorMessages, "Comments can be a maxmium of 100 characters");
-
+        $sqlResult = static::$dbConnection->query($sql);
+        
+        if ($sqlResult->num_rows <= 0) {
+            array_push(static::$errorMessages, "Invalid pick up point");
+        }
     }
 
     public static function checkLocationName($locationName) {
@@ -131,6 +139,18 @@ class Data_Validation extends Utility{
             array_push(static::$errorMessages, "Location names must be more than 2 characters");
         else if (strlen($locationName) > 30) 
             array_push(static::$errorMessages, "Location names must be no more than 30 characters");
+    }
+
+    //returns whether or not the location passed already exists
+    public static function locationExists($location) {
+        $sql = 
+            'SELECT 1
+            FROM campus_locations
+            WHERE Name = "' . $location . '"';
+
+        $sqlResult = Utility::$dbConnection->query($sql);
+        
+        return $sqlResult->num_rows > 0;
     }
 
     public static function timeFormatCorrect($time) {

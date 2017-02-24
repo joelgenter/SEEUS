@@ -5,31 +5,41 @@
         <div id="response"></div>
     </div>
 	<form>
-		&nbsp&nbsp<input type="text" name="numberInParty" placeholder="Number in Party"><span class=error>*</span>
-		<br>
-        &nbsp&nbsp<select name="location">
-            <option disabled selected>Location</option>
-        </select><span class=error>*</span>
-		<br>
-		&nbsp&nbsp<input type="text" name="comments" maxlength="100" placeholder="Location Details">&nbsp
-		<br>
-		&nbsp&nbsp<select name="destination">
-            <option disabled selected>Destination</option>
-        </select><span class=error>*</span>
-		<br>
-		&nbsp&nbsp<input type="text" name="phoneNumber" placeholder="Phone Number" maxlength="10" ><span class=error>*</span>
-		<br>
-		<input type="submit" name="submit" value="Submit">
+        <div>
+		    &nbsp&nbsp<input type="text" name="numberInParty" placeholder="Number in Party"><span class="error">*</span>
+        </div>
+        <div>
+            &nbsp&nbsp<select name="location">
+                <option disabled selected>Location</option>
+            </select><span class="error">*</span>
+        </div>
+        <div id="pickUpPointContainer">
+            &nbsp&nbsp<select name="pickUpPoint">
+                <option disabled selected>Pick-up Point</option>
+            </select><span class="error">*</span>
+        </div>
+        <div>
+            &nbsp&nbsp<select name="destination">
+                <option disabled selected>Destination</option>
+            </select><span class="error">*</span>
+        </div>
+        <div>
+		    &nbsp&nbsp<input type="text" name="phoneNumber" placeholder="Phone Number" maxlength="10" ><span class="error">*</span>
+        </div>
+        <div>
+            <input type="submit" name="submit" value="Submit">
+        </div>
 	</form>
 </div>
 
 <script>
-var $numberInPartyField = $('input[name="numberInParty"]'),
-    $locationField      = $('select[name="location"]'),
-    $destinationField   = $('select[name="destination"]'),
-    $commentsField      = $('input[name="comments"]'),
-    $phoneNumberField   = $('input[name="phoneNumber"]'),
-    $response           = $('#response');
+var $numberInPartyField   = $('input[name="numberInParty"]'),
+    $locationField        = $('select[name="location"]'),
+    $pickUpPointField     = $('select[name="pickUpPoint"]'),
+    $destinationField     = $('select[name="destination"]'),
+    $phoneNumberField     = $('input[name="phoneNumber"]'),
+    $response             = $('#response'),
+    $pickUpPointContainer = $('#pickUpPointContainer');
 
 //to populate phone number field with current phone number
 $.post('php/Get_Phone_Number.php')
@@ -44,17 +54,38 @@ $.post('php/Get_Campus_Locations.php')
     userInterface.populateSelectOptions($destinationField, listOfLocations);
 });
 
+$pickUpPointContainer.hide();
+$locationField.on('change', function() {
+    $.post('php/Get_Pick_Up_Points.php', 
+        {
+            location: $locationField.val()
+        }
+    )
+    .done(function(pickUpPoints) {
+        pickUpPoints = JSON.parse(pickUpPoints);
+        if (pickUpPoints.length > 0) {
+            $pickUpPointContainer.show();
+            //clear non-disabled options
+            userInterface.populateSelectOptions($pickUpPointField, pickUpPoints);
+        } else {
+            $pickUpPointContainer.hide();
+        }
+    });
+});
+
 $('form').submit(function() {
     $.post('php/Escorts/Request_Escort.php', 
         {
             numberInParty:  $numberInPartyField.val(),
             location:       $locationField.val(),
+            pickUpPoint:    $pickUpPointField.val(),
             destination:    $destinationField.val(),
-            comments:       $commentsField.val(),
+            pickUpPoint:    $pickUpPointField.val(),
             phoneNumber:    $phoneNumberField.val()
         }
     )
     .done(function(errorMessages) {
+        $response.html(errorMessages);
         errorMessages = JSON.parse(errorMessages);
         if (errorMessages.length == 0) {
             userInterface.loadContent('view_escorts');

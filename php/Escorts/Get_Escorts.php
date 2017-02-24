@@ -21,7 +21,7 @@ $sql =
         escorts.NumberInParty, 
         cl1.Name AS "Location",  
         cl2.Name AS "Destination", 
-        escorts.Comments, 
+        pick_up_points.Name AS "PickUpPoint",
         escorts.PhoneNumber, 
         escorts.ID,
         escorts.DateTimeChanged,
@@ -34,7 +34,8 @@ $sql =
     INNER JOIN users ON escorts.EID=users.EID
     INNER JOIN status_labels ON escorts.StatusID = status_labels.ID 
     INNER JOIN campus_locations cl1 ON escorts.LocationID = cl1.ID
-    INNER JOIN campus_locations cl2 ON escorts.DestinationID = cl2.ID '
+    INNER JOIN campus_locations cl2 ON escorts.DestinationID = cl2.ID 
+    INNER JOIN pick_up_points ON escorts.PickUpPointID = pick_up_points.ID '
     . $whereClause .
     ' ORDER BY PrimaryOrder ASC, escorts.DateTimeChanged DESC
     LIMIT ' . $start . ', ' . $maxRows;
@@ -53,9 +54,8 @@ for ($i = 0; $i < $numberOfResult; $i++) {
     $escortList[$i]['eid']              = $nextRow['EID'];
     $escortList[$i]['numberInParty']    = $nextRow['NumberInParty'];
     $escortList[$i]['phoneNumber']      = $nextRow['PhoneNumber'];
-    $escortList[$i]['comments']         = $nextRow['Comments'];
+    $escortList[$i]['pickUpPoint']      = $nextRow['PickUpPoint'];
     $escortList[$i]['status']           = $nextRow['StatusLabel'];
     $escortList[$i]['id']               = $nextRow['ID'];
 }
 echo json_encode($escortList);
-// echo $sql;

@@ -7,8 +7,7 @@ Data_Validation::connectDB();
 $errorMessages = [];
 
 $sql =
-    'SELECT 
-        1
+    'SELECT 1
     FROM escorts 
     INNER JOIN status_labels ON escorts.StatusID = status_labels.ID 
     WHERE status_labels.StatusLabel = "Requested" AND EID = "' . $_SESSION['eid'] . '"
@@ -21,12 +20,12 @@ else if (Data_Validation::serviceIsOnline()) {
     $numberInParty  = Security::cleanInput($_POST['numberInParty']);
     $location       = Security::cleanInput($_POST['location']);
     $destination    = Security::cleanInput($_POST['destination']);
-    $comments       = Security::cleanInput($_POST['comments']);
+    $pickUpPoint    = Security::cleanInput($_POST['pickUpPoint']);
     $phoneNumber    = Security::cleanInput($_POST['phoneNumber']);
 
     Data_Validation::checkNumberInParty($numberInParty);
     Data_Validation::checkLocationDestination($location, $destination);
-    Data_Validation::checkComments($comments);
+    Data_Validation::checkPickUpPoint($location, $pickUpPoint);
     Data_Validation::checkPhoneNumber($phoneNumber);
 
     $errorMessages = Data_Validation::getErrorMessages();
@@ -36,24 +35,23 @@ else if (Data_Validation::serviceIsOnline()) {
                     EID, 
                     NumberInParty, 
                     LocationID, 
+                    PickUpPointID,
                     DestinationID, 
-                    Comments, 
                     PhoneNumber
                 ) VALUES ('" . 
                     $_SESSION['eid'] . "', '" .
                     $numberInParty . "', " . 
                     "(SELECT ID FROM campus_locations WHERE Name = '" . $location . "'), " . 
+                    "(SELECT ID FROM pick_up_points WHERE Name = '" . $pickUpPoint . "'), " . 
                     "(SELECT ID FROM campus_locations WHERE Name = '" . $destination . "'), '" . 
-                    $comments . "', '" . 
                     $phoneNumber . "'" .
                 ")";
 
         if (!Data_Validation::$dbConnection->query($sql)) {
-            // array_push($errorMessages, $sql);
             array_push($errorMessages, "Server error");
         }
     }
-} else //service is offline
+} else
     array_push($errorMessages, "Service is currently offline");
 
 echo json_encode($errorMessages);
