@@ -5,21 +5,31 @@
     </div>
 
     <ul id="subMenu">
-        <li id="addLocationButton">Add Campus<br>Location</li>
-        <li id="deleteLocationButton">Delete Campus Location</li>
+        <li id="addCampusLocationButton">Add Campus<br>Location</li>
+        <li id="deleteCampusLocationButton">Delete Campus Location</li>
         <li id="hoursOfOperationButton">Change Hours of Operation</li>
         <li id="activateDeactiveKillswitchButton">Activate/Deactivate Killswitch</li>
     </ul>
 
     <br>
-    <form> 
-        <div id="addLocationContainer">
-            <input type="text" name="locationToAdd" placeholder="Location to Add">
+    <form>
+        <div id="addCampusLocationContainer">
+            <div id="addLocationDestinationContainer">
+                <a href="#" id="addPickUpPointLink">Add pick-up point</a>
+                <input type="text" name="locationToAdd" placeholder="Location to Add">
+            </div>
+            <div id="addPickUpPointContainer">
+                <a href="#" id="addLocationDestinationLink">Add location/destination</a>
+                <select name="newPickUpPointLocation">
+                    <option disabled selected>Pick-up Point Location</option>
+                </select>
+                <input type="text" name="newPickUpPoint" placeholder="New pick-up point">
+            </div>
         </div>
-        <div id="deleteLocationContainer">
+        <div id="deleteCampusLocationContainer">
             <select name="locationToDelete">
                 <option disabled selected>Location to Delete</option>
-            </select><span class=error>*</span>
+            </select>
         </div>
         <div id="hoursOfOperationContainer">
             <table>
@@ -78,21 +88,19 @@
 var $response = $('#response'),
     
     //field containers
-    $addLocationContainer             = $('#addLocationContainer'),
-    $deleteLocationContainer          = $('#deleteLocationContainer'),
+    $addCampusLocationContainer             = $('#addCampusLocationContainer'),
+    $deleteCampusLocationContainer          = $('#deleteCampusLocationContainer'),
     $hoursOfOperationContainer        = $('#hoursOfOperationContainer'),
     $activateDeactiveKillswitchContainer = $('#activateDeactiveKillswitchContainer'),
 
     //settings buttons
     $submitButton                     = $('input[type="submit"]'),
-    $addLocationButton                = $('#addLocationButton'),
-    $deleteLocationButton             = $('#deleteLocationButton'),
+    $addCampusLocationButton                = $('#addCampusLocationButton'),
+    $deleteCampusLocationButton             = $('#deleteCampusLocationButton'),
     $hoursOfOperationButton           = $('#hoursOfOperationButton'),
     $activateDeactiveKillswitchButton = $('#activateDeactiveKillswitchButton'),
 
     //fields
-    $locationToAddField    = $('input[name="locationToAdd"]'),
-
     $locationToDeleteField = $('select[name="locationToDelete"]'),
 
     $sundayStart           = $('input[name="sundayStart"]'),
@@ -110,13 +118,23 @@ var $response = $('#response'),
     $saturdayStart         = $('input[name="saturdayStart"]'),
     $saturdayEnd           = $('input[name="saturdayEnd"]'),
 
-    $killswitch            = $('#killswitch');
+    $killswitch            = $('#killswitch'),
+    
+    //location destination manipulation
+    $addPickUpPointContainer = $('#addPickUpPointContainer'),
+    $addLocationDestinationContainer = $('#addLocationDestinationContainer'),
+    $addLocationDestinationLink = $('#addLocationDestinationLink'),
+    $addPickUpPointLink = $('#addPickUpPointLink'),
+    $locationToAddField    = $('input[name="locationToAdd"]'),
+    $newPickUpPointLocationField = $('select[name="newPickUpPointLocation"]'),
+    $newPickUpPointField = $('input[name="newPickUpPoint"]');
 
 
 $.post('php/Get_Campus_Locations.php')
 .done(function(listOfLocations) {
     listOfLocations = JSON.parse(listOfLocations);
     userInterface.populateSelectOptions($locationToDeleteField, listOfLocations);
+    userInterface.populateSelectOptions($newPickUpPointLocationField, listOfLocations);
 });
 
 $.post('php/Get_Hours_Of_Operation.php')
@@ -159,25 +177,36 @@ updateKillswitchStatus();
 
 function resetMenu($button, $container) {
     $submitButton.show();
-    $addLocationButton.removeAttr("class");
-    $deleteLocationButton.removeAttr("class");
+    $addCampusLocationButton.removeAttr("class");
+    $deleteCampusLocationButton.removeAttr("class");
     $hoursOfOperationButton.removeAttr("class");
     $activateDeactiveKillswitchButton.removeAttr("class");
-    $addLocationContainer.hide();
-    $deleteLocationContainer.hide();
+    $addCampusLocationContainer.hide();
+    $deleteCampusLocationContainer.hide();
     $hoursOfOperationContainer.hide();
     $activateDeactiveKillswitchContainer.hide();
     $response.empty();
     $button.attr("class", "active");
     $container.show();
 }
+
+$addLocationDestinationLink.on('click', function() {
+    $addPickUpPointContainer.hide();
+    $addLocationDestinationContainer.show();
+});
+$addLocationDestinationLink.click();
+
+$addPickUpPointLink.on('click', function() {
+    $addLocationDestinationContainer.hide();
+    $addPickUpPointContainer.show();
+});
  
-$addLocationButton.on('click', function() {
-    resetMenu($(this), $addLocationContainer);
+$addCampusLocationButton.on('click', function() {
+    resetMenu($(this), $addCampusLocationContainer);
 });
 
-$deleteLocationButton.on('click', function() {
-    resetMenu($(this), $deleteLocationContainer);
+$deleteCampusLocationButton.on('click', function() {
+    resetMenu($(this), $deleteCampusLocationContainer);
 });
 
 $hoursOfOperationButton.on('click', function() {
@@ -189,7 +218,7 @@ $activateDeactiveKillswitchButton.on('click', function() {
     $submitButton.hide();
 });
 
-$addLocationButton.click();
+$addCampusLocationButton.click();
 
 $killswitch.on('click', function() {    //$activateDeactiveKillswitchContainer is visible
     $.post('php/Settings/Set_Killswitch_Status.php',
@@ -207,15 +236,23 @@ $killswitch.on('click', function() {    //$activateDeactiveKillswitchContainer i
 */
 $('form').submit(function() {
     //setting url and data to send based on which fields are visible
-    if ($deleteLocationContainer.is(':visible')) {
+    if ($deleteCampusLocationContainer.is(':visible')) {
         var url = 'php/Settings/Delete_Campus_Location.php';
         var dataToSend = {
             campusLocationToDelete: $locationToDeleteField.val()
         }
-    } else if ($addLocationContainer.is(':visible')) {
-        var url = 'php/Settings/Add_Campus_Location.php';
-        var dataToSend = {
-            campusLocationToAdd: $locationToAddField.val()
+    } else if ($addCampusLocationContainer.is(':visible')) {
+        if ($addLocationDestinationContainer.is(':visible')) {
+            var url = 'php/Settings/Add_Campus_Location.php';
+            var dataToSend = {
+                campusLocationToAdd: $locationToAddField.val()
+            }
+        } else { //$addPickUpPointContainer is visible
+            var url = 'php/Settings/Add_Pick_Up_Point.php';
+            var dataToSend = {
+                campusLocation: $newPickUpPointLocationField.val(),
+                newPickUpPoint: $newPickUpPointField.val()
+            };
         }
     } else if ($hoursOfOperationContainer.is(':visible')) {
         var url = 'php/Settings/Set_Hours_Of_Operation.php';
@@ -240,6 +277,7 @@ $('form').submit(function() {
     //sending and receving the data
     $.post(url, dataToSend)
     .done(function(errorMessages) {
+        $response.html(errorMessages);      //testing
         errorMessages = JSON.parse(errorMessages);  
         $response.empty();
         if (errorMessages.length == 0)

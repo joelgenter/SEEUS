@@ -141,6 +141,15 @@ class Data_Validation extends Utility{
             array_push(static::$errorMessages, "Location names must be no more than 30 characters");
     }
 
+    public static function checkPickUpPointName($newPickUpPoint) {
+        if (empty($newPickUpPoint)) 
+            array_push(static::$errorMessages, "A pick-up point name is required");
+        else if (strlen($newPickUpPoint) < 2) 
+            array_push(static::$errorMessages, "Pick-up point names must be more than 2 characters");
+        else if (strlen($newPickUpPoint) > 30) 
+            array_push(static::$errorMessages, "Pick-up point names must be no more than 30 characters");
+    }
+
     //returns whether or not the location passed already exists
     public static function locationExists($location) {
         $sql = 
@@ -148,6 +157,19 @@ class Data_Validation extends Utility{
             FROM campus_locations
             WHERE Name = "' . $location . '"';
 
+        $sqlResult = Utility::$dbConnection->query($sql);
+        
+        return $sqlResult->num_rows > 0;
+    }
+
+    public static function pickUpPointExists($campusLocation, $newPickUpPoint) {
+        $sql =
+            "SELECT 1
+            FROM campus_locations, pick_up_points
+            WHERE campus_locations.Name = '$campusLocation'
+            AND pick_up_points.Name = '$newPickUpPoint'
+            AND pick_up_points.LocationID = campus_locations.ID";
+        echo $sql;
         $sqlResult = Utility::$dbConnection->query($sql);
         
         return $sqlResult->num_rows > 0;

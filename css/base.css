@@ -230,4 +230,11 @@ li:hover, li.active {
   color: white;
   opacity: 1; }
 
+#addLocationDestinationContainer > *, #addPickUpPointContainer > * {
+  display: block;
+  margin: 15px auto; }
+
+#addLocationDestinationContainer > a, #addPickUpPointContainer > a {
+  font-size: 15px; }
+
 /*# sourceMappingURL=base.css.map */
