@@ -10,7 +10,8 @@ if (Data_Validation::locationExists($location)) {
     $sql = "SELECT pick_up_points.Name 
            FROM pick_up_points, campus_locations
            WHERE campus_locations.Name = '$location'
-           AND pick_up_points.LocationID = campus_locations.ID";
+           AND pick_up_points.LocationID = campus_locations.ID
+           AND pick_up_points.Enabled = 1";
            
     $sqlResult = Data_Validation::$dbConnection->query($sql);
 

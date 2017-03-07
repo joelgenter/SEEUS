@@ -230,11 +230,11 @@ li:hover, li.active {
   color: white;
   opacity: 1; }
 
-#addLocationDestinationContainer > *, #addPickUpPointContainer > * {
+#addLocationDestinationContainer > *, #addPickUpPointContainer, #deleteLocationDestinationContainer > *, #deletePickUpPointContainer > * {
   display: block;
   margin: 15px auto; }
 
-#addLocationDestinationContainer > a, #addPickUpPointContainer > a {
+#addLocationDestinationContainer > a, #addPickUpPointContainer > a, #deleteLocationDestinationContainer > a, #deletePickUpPointContainer > a {
   font-size: 15px; }
 
 /*# sourceMappingURL=base.css.map */

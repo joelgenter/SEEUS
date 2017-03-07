@@ -15,11 +15,11 @@
     <form>
         <div id="addCampusLocationContainer">
             <div id="addLocationDestinationContainer">
-                <a href="#" id="addPickUpPointLink">Add pick-up point</a>
+                <a href="#" id="addPickUpPointLink">Add a pick-up point</a>
                 <input type="text" name="locationToAdd" placeholder="Location to Add">
             </div>
             <div id="addPickUpPointContainer">
-                <a href="#" id="addLocationDestinationLink">Add location/destination</a>
+                <a href="#" id="addLocationDestinationLink">Add a location/destination</a>
                 <select name="newPickUpPointLocation">
                     <option disabled selected>Pick-up Point Location</option>
                 </select>
@@ -27,9 +27,21 @@
             </div>
         </div>
         <div id="deleteCampusLocationContainer">
-            <select name="locationToDelete">
-                <option disabled selected>Location to Delete</option>
-            </select>
+            <div id="deleteLocationDestinationContainer">
+                <a href="#" id="deletePickUpPointLink">Delete a pick-up point</a>
+                <select name="locationToDelete">
+                    <option disabled selected>Location to Delete</option>
+                </select>
+            </div>
+            <div id="deletePickUpPointContainer">
+                <a href="#" id="deleteLocationDestinationLink">Delete a location/destination</a>
+                <select name="oldPickUpPointLocation">
+                    <option disabled selected>Pick-up Point Location</option>
+                </select>
+                <select name="oldPickUpPoint">
+                    <option disabled selected>Pick-up Point</option>
+                </select>
+            </div>
         </div>
         <div id="hoursOfOperationContainer">
             <table>
@@ -100,9 +112,7 @@ var $response = $('#response'),
     $hoursOfOperationButton           = $('#hoursOfOperationButton'),
     $activateDeactiveKillswitchButton = $('#activateDeactiveKillswitchButton'),
 
-    //fields
-    $locationToDeleteField = $('select[name="locationToDelete"]'),
-
+    //hours of operation fields
     $sundayStart           = $('input[name="sundayStart"]'),
     $sundayEnd             = $('input[name="sundayEnd"]'),
     $mondayStart           = $('input[name="mondayStart"]'),
@@ -120,7 +130,7 @@ var $response = $('#response'),
 
     $killswitch            = $('#killswitch'),
     
-    //location destination manipulation
+    //Adding campus locations
     $addPickUpPointContainer = $('#addPickUpPointContainer'),
     $addLocationDestinationContainer = $('#addLocationDestinationContainer'),
     $addLocationDestinationLink = $('#addLocationDestinationLink'),
@@ -129,12 +139,22 @@ var $response = $('#response'),
     $newPickUpPointLocationField = $('select[name="newPickUpPointLocation"]'),
     $newPickUpPointField = $('input[name="newPickUpPoint"]');
 
+    //Deleting campus locations
+    $deletePickUpPointContainer = $('#deletePickUpPointContainer'),
+    $deleteLocationDestinationContainer = $('#deleteLocationDestinationContainer'),
+    $deleteLocationDestinationLink = $('#deleteLocationDestinationLink'),
+    $deletePickUpPointLink = $('#deletePickUpPointLink'),
+    $locationToDeleteField    = $('select[name="locationToDelete"]'),
+    $oldPickUpPointLocationField = $('select[name="oldPickUpPointLocation"]'),
+    $oldPickUpPointField = $('select[name="oldPickUpPoint"]');
+
 
 $.post('php/Get_Campus_Locations.php')
 .done(function(listOfLocations) {
     listOfLocations = JSON.parse(listOfLocations);
     userInterface.populateSelectOptions($locationToDeleteField, listOfLocations);
     userInterface.populateSelectOptions($newPickUpPointLocationField, listOfLocations);
+    userInterface.populateSelectOptions($oldPickUpPointLocationField, listOfLocations);
 });
 
 $.post('php/Get_Hours_Of_Operation.php')
@@ -190,6 +210,7 @@ function resetMenu($button, $container) {
     $container.show();
 }
 
+//interface logic for adding campus locations
 $addLocationDestinationLink.on('click', function() {
     $addPickUpPointContainer.hide();
     $addLocationDestinationContainer.show();
@@ -200,7 +221,32 @@ $addPickUpPointLink.on('click', function() {
     $addLocationDestinationContainer.hide();
     $addPickUpPointContainer.show();
 });
- 
+
+//interface logic for deleting campus locations
+$deleteLocationDestinationLink.on('click', function() {
+    $deletePickUpPointContainer.hide();
+    $deleteLocationDestinationContainer.show();
+});
+$deleteLocationDestinationLink.click();
+
+$deletePickUpPointLink.on('click', function() {
+    $deleteLocationDestinationContainer.hide();
+    $deletePickUpPointContainer.show();
+});
+
+$oldPickUpPointLocationField.on('change', function() {
+    $.post('php/Get_Pick_Up_Points.php', 
+        {
+            location: $oldPickUpPointLocationField.val()
+        }
+    )
+    .done(function(pickUpPoints) {
+        pickUpPoints = JSON.parse(pickUpPoints);
+        userInterface.populateSelectOptions($oldPickUpPointField, pickUpPoints);
+    });
+});
+
+//interface submenu logic
 $addCampusLocationButton.on('click', function() {
     resetMenu($(this), $addCampusLocationContainer);
 });
@@ -237,9 +283,17 @@ $killswitch.on('click', function() {    //$activateDeactiveKillswitchContainer i
 $('form').submit(function() {
     //setting url and data to send based on which fields are visible
     if ($deleteCampusLocationContainer.is(':visible')) {
-        var url = 'php/Settings/Delete_Campus_Location.php';
-        var dataToSend = {
-            campusLocationToDelete: $locationToDeleteField.val()
+        if ($deleteLocationDestinationContainer.is(':visible')) {
+            var url = 'php/Settings/Delete_Campus_Location.php';
+            var dataToSend = {
+                campusLocationToDelete: $locationToDeleteField.val()
+            }
+        } else { //$deletePickUpPointContainer is visible
+            var url = 'php/Settings/Delete_Pick_Up_Point.php';
+            var dataToSend = {
+                campusLocation: $oldPickUpPointLocationField.val(),
+                oldPickUpPoint: $oldPickUpPointField.val()
+            };
         }
     } else if ($addCampusLocationContainer.is(':visible')) {
         if ($addLocationDestinationContainer.is(':visible')) {
