@@ -21,9 +21,7 @@ body {
 }
 
 input[type=text],[type=password], [type=time], select {
-    margin: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 5px 0;
     padding: 5px 5px;
     border: none;
     border-bottom: 1px solid #ffd000;
@@ -36,7 +34,6 @@ select {
 [type=time] {
     margin: 0;
     border: none;
-    width: 60px;
 }
 
 table, th, td, tr {
@@ -45,13 +42,14 @@ table, th, td, tr {
     border: 1px solid #ffd000;
     margin: 10px;
 }
+
 table {
-    border-collapse: collapse;
-    border: 5px solid #ffd000;
-    width: 60%; 
-    border: 1px;
+    width: 1px; //for whatever reason this keeps the width of the table relative
 }
+
 #subMenu {
+    display: flex;
+    align-items: center;
     position: relative;
     left: 50%;
     transform: translate(-50%);
@@ -73,11 +71,17 @@ li:hover, li.active {
     opacity: 1;
 }
 
-#addLocationDestinationContainer > *, #addPickUpPointContainer, #deleteLocationDestinationContainer > *, #deletePickUpPointContainer > * {
+#addLocationDestinationContainer > *, #addPickUpPointContainer > *, #deleteLocationDestinationContainer > *, #deletePickUpPointContainer > * {
     display: block;
     margin: 15px auto;
 }
 
 #addLocationDestinationContainer > a, #addPickUpPointContainer > a, #deleteLocationDestinationContainer > a, #deletePickUpPointContainer > a {
     font-size: 15px;
+}
+
+#passwordFieldContainer, #phoneNumberContainer, form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

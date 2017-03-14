@@ -65,13 +65,13 @@
                 "<tr>" +
                     "<th>Last Modified</th>" +
                     "<th>Location</th>" +
+                    "<th>Pick Up Point</th>" +
                     "<th>Destination</th>" +
                     "<th>First Name</th>" +
                     "<th>Last Name</th>" +
                     "<th>EID</th>" +
                     "<th>Number in Party</th>" +
                     "<th>Phone Number</th>" +
-                    "<th>Pick Up Point</th>" +
                     "<th>Status</th>" +
                 "</tr>";
                 $tableContainer.html(html);
@@ -89,13 +89,13 @@
                     "<tr>" +
                         "<td>" + escortList[i].dateTimeChanged  + "</td>" +
                         "<td>" + escortList[i].location         + "</td>" +
+                        "<td>" + escortList[i].pickUpPoint      + "</td>" +
                         "<td>" + escortList[i].destination      + "</td>" +
                         "<td>" + escortList[i].firstName        + "</td>" +
                         "<td>" + escortList[i].lastName         + "</td>" +
                         "<td>" + escortList[i].eid              + "</td>" +
                         "<td>" + escortList[i].numberInParty    + "</td>" +
                         "<td>" + escortList[i].phoneNumber      + "</td>" +
-                        "<td>" + escortList[i].pickUpPoint      + "</td>" +
                         "<td>" + escortList[i].status + buttons + "</td>" +
                     "</tr>";
                 $tableContainer.append(html);
