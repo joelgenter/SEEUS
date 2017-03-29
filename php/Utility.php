@@ -3,8 +3,12 @@ class Utility {
     public static $dbConnection;
 
     public static function connectDB() {
-         static::$dbConnection = new mysqli(
-            static::$DB_HOST, static::$DB_USER, static::$DB_PASS, static::$DB_NAME
+        $databaseCredentials = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/../.ini');
+        static::$dbConnection = new mysqli(
+            $databaseCredentials['host'],
+            $databaseCredentials['user'],
+            $databaseCredentials['password'], 
+            $databaseCredentials['name']
         );
     }
 
@@ -81,7 +85,8 @@ class Utility {
 
 
             // //TESTING
-            // return "now: ". date("m/d/Y H:i:s", $now) . "\nyesterdayShiftEnd: " . date("m/d/Y H:i:s", $yesterdayShiftEnd) . "\now >= yesterdayShiftEnd: " . ($now < $yesterdayShiftEnd); //testing 
+            // return "Today: " . date("m/d/Y H:i:s") . "\nYesterday's date: " . $dateYesterday . "\nYesterday's shift start time: " . $startTimeYesterday . "\nLength of Yesterday's shift: " . $durationYesterday;
+            // return "Now: ". date("m/d/Y H:i:s", $now) . "\nYesterdayShiftEnd: " . date("m/d/Y H:i:s", $yesterdayShiftEnd) . "\nTodayShiftStart: " . date("m/d/Y H:i:s", $todayShiftStart) . "\nTodayShiftEnd: " . date("m/d/Y H:i:s", $todayShiftEnd) . "\nnow >= yesterdayShiftEnd: " . ($now < $yesterdayShiftEnd); //testing 
             // //TESTING
             
 
@@ -103,27 +108,4 @@ class Utility {
         }
         return $verificationCode;
     }
-
-    //http://maximus.freewha.com/ seeus.xp3.biz
-    /*$DB_NAME = '1103400';
-    $DB_HOST = 'localhost';
-    $DB_USER = '1103400';
-    $DB_PASS = 'seeusdevelopment';*/
-
-    #--Local Database Info--
-    protected static $DB_NAME = 'seeusdb';
-    protected static $DB_HOST = 'localhost';
-    protected static $DB_USER = 'root';
-    protected static $DB_PASS = '';
-
-    // #--000webhost Database Info--
-    // protected static $DB_NAME = 'id522857_seeusdb';
-    // protected static $DB_HOST = 'localhost';
-    // protected static $DB_USER = 'id522857_root';
-    // protected static $DB_PASS = 'testpass';
-
-    #$DB_NAME = 'a6995183_SEEUS';
-    #$DB_HOST = 'mysql7.000webhost.com';
-    #$DB_USER = 'a6995183_Admin';
-    #$DB_PASS = 'testpass';	
 }

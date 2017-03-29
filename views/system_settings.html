@@ -271,7 +271,8 @@ $killswitch.on('click', function() {    //$activateDeactiveKillswitchContainer i
         {
             setToActive: !killswitchIsActive
         }
-    ).done(function() {
+    ).done(function(response) {
+        console.log(response);
         updateKillswitchStatus();
         userInterface.updateStatusDisplay();
     });

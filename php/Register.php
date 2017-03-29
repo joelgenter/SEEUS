@@ -38,18 +38,22 @@ if (count($errorMessages) == 0) {
                 Verified,
                 EID, 
                 PhoneNumber
-            ) VALUES ('" . 
-                $email . "', '" .
-                $password . "', '" . 
-                $firstName . "', '" . 
-                $lastName . "', '" . 
-                $verificationCode . "', " .
-                "0, '" .
-                $eid . "', '" . 
-                $phoneNumber . "'" .
-            ")";
+            ) VALUES (?, ?, ?, ?, ?, 0, ?, ?)";
 
-    Data_Validation::$dbConnection->query($sql);
+    $stmt = Utility::$dbConnection->prepare($sql);
+    $stmt->bind_param("sssssss",
+        $email,
+        $password,
+        $firstName,
+        $lastName,
+        $verificationCode,
+        $eid,
+        $phoneNumber
+    );
+
+    if (!$stmt->execute()) {
+        array_push($errorMessages, "An error occurred while registering");
+    }
 
     $currentUser = new User($email);
 

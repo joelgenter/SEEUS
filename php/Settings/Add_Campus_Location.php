@@ -16,19 +16,24 @@ if (count($errorMessages) == 0) {
     if (Data_Validation::locationExists($campusLocationToAdd)) {
         $sql = 'UPDATE campus_locations
                 SET Enabled = 1
-                WHERE Name = "' . $campusLocationToAdd . '"';
-        Utility::$dbConnection->query($sql);
+                WHERE Name = ?';
 
+        $stmt = Utility::$dbConnection->prepare($sql);
+        $stmt->bind_param("s", $campusLocationToAdd);
     } else {    //the name doesn't exist yet
-        $sql = "INSERT INTO campus_locations (
-                Name, 
+        $sql = 
+            "INSERT INTO campus_locations (
+                Name,
                 Enabled
-            ) VALUES ('" . 
-                $campusLocationToAdd . "', 
+            ) VALUES (
+                ?, 
                 1
             )";
-        Utility::$dbConnection->query($sql);
+
+        $stmt = Utility::$dbConnection->prepare($sql);
+        $stmt->bind_param("s", $campusLocationToAdd);
     }
+    $stmt->execute();
 }
 
 echo json_encode($errorMessages);

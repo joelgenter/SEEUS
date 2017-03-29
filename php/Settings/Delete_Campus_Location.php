@@ -10,11 +10,14 @@ Utility::connectDB();
 
 $sql = 'UPDATE campus_locations
         SET Enabled = 0
-        WHERE Name = "' . $campusLocationToDelete . '"';
+        WHERE Name = ?';
+
+$stmt = Utility::$dbConnection->prepare($sql);
+$stmt->bind_param("s", $campusLocationToDelete);
 
 $errorMessages = [];
 
-if (!Utility::$dbConnection->query($sql)) {
+if (!$stmt->execute()) {
     array_push($errorMessages, "Error deleting campus location");
 }  
 

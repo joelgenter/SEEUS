@@ -3,7 +3,6 @@ class User extends Utility {
     /*
     * declaration of local variables
     */
-    // private static $dbConnection;      //database mysqli connection
     public $userInfo;          //results of db query in constructor
     private $email;             //the email used to initialize this object
     private static $errorMessages = []; 
@@ -11,11 +10,6 @@ class User extends Utility {
     /*
     * private helper methods
     */
-    // private static function connectDB() {
-    //      static::$dbConnection = new mysqli(
-    //         static::$DB_HOST, static::$DB_USER, static::$DB_PASS, static::$DB_NAME
-    //     );
-    // }
 
     /*
     * magic methods
@@ -32,9 +26,22 @@ class User extends Utility {
                     Password,
                     LastName
                 FROM users 
-                WHERE Email = "' . $this->email . '"';
-        $result = static::$dbConnection->query($sql);
-        $this->userInfo = mysqli_fetch_assoc($result);     
+                WHERE Email = ?';
+
+        $stmt = Utility::$dbConnection->prepare($sql);
+        $stmt->bind_param("s", $this->email);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result(
+            $this->userInfo["Password"],
+            $this->userInfo["EID"],
+            $this->userInfo["FirstName"],
+            $this->userInfo["Verified"],
+            $this->userInfo["VerificationCode"],
+            $this->userInfo["Password"],
+            $this->userInfo["LastName"]
+        );
+        $stmt->fetch();
     }
 
     public function __sleep() {
@@ -58,18 +65,25 @@ class User extends Utility {
     */
     public static function emailRegistered($email) {
         static::connectDB();
-        $sql = 'SELECT
-                    Email
+        $sql = "SELECT
+                    1
                 FROM users 
-                WHERE Email = "' . $email . '"';
-                
-        $result = static::$dbConnection->query($sql);
+                WHERE Email = ?";
 
-        if ($result->num_rows == 0) {
-            array_push(static::$errorMessages, "Email not registered");
-            return false;
+        $stmt = static::$dbConnection->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result(
+            $exists
+        );
+        $stmt->fetch();
+
+        if ($exists) {
+            return TRUE;
         } else {
-            return true;
+            array_push(static::$errorMessages, "Email not registered");
+            return FALSE;
         }
     }
 
@@ -111,42 +125,46 @@ class User extends Utility {
         $_SESSION['firstName'] = $this->userInfo['FirstName'];
     }
 
-    public function logout() {
-        
-    }
-
     public function sendVerificationCode() {
         mail(
             $this->email,                         //recipient
             "SEEUS Verification Code",      //subject
-            "Your verification code is: " . //message
-                    $this->userInfo['VerificationCode']
+            "Hello,\n\nYour verification code is: " . $this->userInfo['VerificationCode'] //message
         );
     }
 
     public function verifyEmail() {
         $sql = 'UPDATE users
                 SET Verified = 1
-                WHERE EID = "' . $this->userInfo['EID'] . '"';
-        static::$dbConnection->query($sql);
+                WHERE EID = ?';
+
+        $stmt = static::$dbConnection->prepare($sql);
+        $stmt->bind_param("s", $this->userInfo['EID']);
+        $stmt->execute();
     }
 
     public function changePassword($newPassword) {
         $sql = 'UPDATE users
-                SET Password = "' . $newPassword . '"
-                WHERE EID = "' . $_SESSION['eid'] . '"';
-        if (!static::$dbConnection->query($sql)) {
-            array_push(static::$errorMessages, "Could not change password");
-        }        
+                SET Password = ?
+                WHERE EID = ?';
+
+        $stmt = static::$dbConnection->prepare($sql);
+        $stmt->bind_param("ss", $newPassword, $this->userInfo['EID']);
+        $stmt->execute();
     }
 
     public static function changePhoneNumber($newPhoneNumber) {
         $sql = 'UPDATE users
-                SET PhoneNumber = "' . $newPhoneNumber . '"
-                WHERE EID = "' . $_SESSION['eid'] . '"';
-        if (!static::$dbConnection->query($sql)) {
+                SET PhoneNumber = ?
+                WHERE EID = ?';
+
+        $stmt = static::$dbConnection->prepare($sql);
+        if (
+            !$stmt->bind_param("ss", $newPhoneNumber, $_SESSION['eid']) ||
+            !$stmt->execute()
+        ) {
             array_push(static::$errorMessages, "Could not change phone number");
-        }  
+        }
     }
 
     /*
@@ -156,10 +174,4 @@ class User extends Utility {
         $errorMessages = static::$errorMessages;
         return $errorMessages;
     }
-
-
-    /*
-    * maintenance functions
-    */
-
 }

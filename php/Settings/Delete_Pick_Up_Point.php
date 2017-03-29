@@ -11,18 +11,20 @@ Utility::connectDB();
 
 $sql = "UPDATE pick_up_points
         SET Enabled = 0
-        WHERE Name = '$oldPickUpPoint'
+        WHERE Name = ?
         AND LocationID = (
             SELECT ID
             FROM campus_locations
-            WHERE Name = '$campusLocation'
+            WHERE Name = ?
         )";
+
+$stmt = Utility::$dbConnection->prepare($sql);
+$stmt->bind_param("ss", $oldPickUpPoint, $campusLocation);
 
 $errorMessages = [];
 
-if (!Utility::$dbConnection->query($sql)) {
-    // array_push($errorMessages, "Error deleting pick-up point");
-    array_push($errorMessages, $sql);
+if (!$stmt->execute()) {
+    array_push($errorMessages, "Error deleting pick-up point");
 } 
 
 echo json_encode($errorMessages);

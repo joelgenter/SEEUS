@@ -31,27 +31,33 @@ else if (Data_Validation::serviceIsOnline()) {
     $errorMessages = Data_Validation::getErrorMessages();
 
     if (count($errorMessages) == 0) {
-        $sql = "INSERT INTO escorts (
-                    EID, 
-                    NumberInParty, 
-                    LocationID, 
-                    PickUpPointID,
-                    DestinationID, 
-                    PhoneNumber
-                ) VALUES ('" . 
-                    $_SESSION['eid'] . "', '" .
-                    $numberInParty . "', " . 
-                    "(SELECT ID FROM campus_locations WHERE Name = '" . $location . "'), " . 
-                    "(SELECT ID FROM pick_up_points WHERE Name = '" . $pickUpPoint . "'), " . 
-                    "(SELECT ID FROM campus_locations WHERE Name = '" . $destination . "'), '" . 
-                    $phoneNumber . "'" .
-                ")";
+        $sql = 
+            "INSERT INTO escorts (
+                EID, 
+                NumberInParty, 
+                LocationID, 
+                PickUpPointID,
+                DestinationID, 
+                PhoneNumber
+            ) VALUES ( 
+                ?,
+                ?, 
+                (SELECT ID FROM campus_locations WHERE Name = ?),
+                (SELECT ID FROM pick_up_points WHERE Name = ?), 
+                (SELECT ID FROM campus_locations WHERE Name = ?),
+                ?
+            )";
 
-        if (!Data_Validation::$dbConnection->query($sql)) {
+        $stmt = Data_Validation::$dbConnection->prepare($sql);
+        $stmt->bind_param("sissss", $_SESSION['eid'], $numberInParty, $location, $pickUpPoint, $destination, $phoneNumber);
+        
+
+        if (!$stmt->execute()) {
             array_push($errorMessages, "Server error");
         }
     }
-} else
+} else {
     array_push($errorMessages, "Service is currently offline");
+}
 
 echo json_encode($errorMessages);

@@ -18,12 +18,14 @@ if (count($errorMessages) == 0) {
         $sql = 
             "UPDATE pick_up_points
             SET Enabled = 1
-            WHERE Name = '$campusLocationToAdd'
+            WHERE Name = ?
             AND LocationID = (
                 SELECT ID
                 FROM campus_locations
-                WHERE campus_locations.Name = '$campusLocation'
+                WHERE campus_locations.Name = ?
             )";
+        $stmt = Utility::$dbConnection->prepare($sql);
+        $stmt->bind_param("ss", $newPickUpPoint, $campusLocation);
     } else {    //the pick-up point doesn't exist yet
         $sql =
             "INSERT INTO pick_up_points (
@@ -34,13 +36,15 @@ if (count($errorMessages) == 0) {
                 (
                     SELECT ID
                     FROM campus_locations
-                    WHERE campus_locations.Name = '$campusLocation'
+                    WHERE campus_locations.Name = ?
                 ),
-                '$newPickUpPoint',
+                ?,
                 1
             )";
+        $stmt = Utility::$dbConnection->prepare($sql);
+        $stmt->bind_param("ss", $campusLocation, $newPickUpPoint);
     }
-    Utility::$dbConnection->query($sql);
+    $stmt->execute();
 }
 
 echo json_encode($errorMessages);

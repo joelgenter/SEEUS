@@ -10,10 +10,14 @@ User::connectDB();
 if (User::emailRegistered($email)) {
     $newVerificationCode = Utility::generateVerificationCode();
     Utility::connectDB();
+
     $sql = 'UPDATE users
-            SET VerificationCode = "' . $newVerificationCode . '"
-            WHERE Email = "' . $email . '"';
-    Utility::$dbConnection->query($sql);
+            SET VerificationCode = ?
+            WHERE Email = ?';
+
+    $stmt = Utility::$dbConnection->prepare($sql);
+    $stmt->bind_param("ss", $newVerificationCode, $email);
+    $stmt->execute();
 
     $currentUser = new User($email);
     // $currentUser->sendVerificationCode();            //for sending out the verification code to the email

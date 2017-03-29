@@ -121,6 +121,7 @@ UserInterface.prototype.getUserType = function(callback) {
 }
 
 UserInterface.prototype.populateSelectOptions = function($selectElement, arrayOfOptions) {
+    $selectElement.children("option:not(:disabled)").remove();
     var $newElement;
     for (var i = 0; i < arrayOfOptions.length; i++) {
         $newElement = $('<option>' + arrayOfOptions[i] + '</option>');
@@ -161,8 +162,6 @@ UserInterface.prototype.updateStatusDisplay = function() {
     var prototype = this;
     $.post('php/Get_Status.php')
     .done(function(isOnline) {
-        // prototype.$statusElement.html(isOnline);            //testing
-        // console.log(isOnline);                              //testing
         if (isOnline == 0)
             isOnline = false;
         else 

@@ -45,7 +45,7 @@
                     });
                 }
             } else {
-                userInterface.writeErrorResponse($response, data.errorMessages);
+                userInterface.writeErrorResponse($response, userInterface.arrayToHTML(data.errorMessages));
             }
         })
         .fail(function() {

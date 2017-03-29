@@ -11,7 +11,7 @@ Utility::connectDB();
 if ($_SESSION['eid'] == 1 || $_SESSION['eid'] == 2) 
     $whereClause = "";
 else
-    $whereClause = 'WHERE escorts.EID = "' . $_SESSION['eid'] . '"';
+    $whereClause = "WHERE escorts.EID = '" . $_SESSION['eid'] . "'";
 
 $sql = 
     'SELECT 
@@ -38,24 +38,46 @@ $sql =
     INNER JOIN pick_up_points ON escorts.PickUpPointID = pick_up_points.ID '
     . $whereClause .
     ' ORDER BY PrimaryOrder ASC, escorts.DateTimeChanged DESC
-    LIMIT ' . $start . ', ' . $maxRows;
+    LIMIT ?, ?';
+
+
+
+$stmt = Utility::$dbConnection->prepare($sql);
+$stmt->bind_param("ii", $start, $maxRows);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result(
+    $eid,
+    $firstName,
+    $lastName,
+    $numberInParty,
+    $location,
+    $destination,
+    $pickUpPoint,
+    $phoneNumber,
+    $id,
+    $dateTimeChanged,
+    $statusLabel,
+    $primaryOrder       //not used
+);
+
 
 $escortList = [];
-$sqlResult = Utility::$dbConnection->query($sql);
-$numberOfResult = $sqlResult->num_rows;
+$numberOfResult = $stmt->num_rows;
 for ($i = 0; $i < $numberOfResult; $i++) {
-    $nextRow = mysqli_fetch_assoc($sqlResult);
+    $stmt->fetch();
     $escortList[$i] = [];
-    $escortList[$i]['dateTimeChanged']  = $nextRow['DateTimeChanged'];
-    $escortList[$i]['location']         = $nextRow['Location'];
-    $escortList[$i]['destination']      = $nextRow['Destination'];
-    $escortList[$i]['firstName']        = $nextRow['FirstName'];
-    $escortList[$i]['lastName']         = $nextRow['LastName'];
-    $escortList[$i]['eid']              = $nextRow['EID'];
-    $escortList[$i]['numberInParty']    = $nextRow['NumberInParty'];
-    $escortList[$i]['phoneNumber']      = $nextRow['PhoneNumber'];
-    $escortList[$i]['pickUpPoint']      = $nextRow['PickUpPoint'];
-    $escortList[$i]['status']           = $nextRow['StatusLabel'];
-    $escortList[$i]['id']               = $nextRow['ID'];
+    $escortList[$i]['dateTimeChanged']  = $dateTimeChanged;
+    $escortList[$i]['location']         = $location;
+    $escortList[$i]['destination']      = $destination;
+    $escortList[$i]['firstName']        = $firstName;
+    $escortList[$i]['lastName']         = $lastName;
+    $escortList[$i]['eid']              = $eid;
+    $escortList[$i]['numberInParty']    = $numberInParty;
+    $escortList[$i]['phoneNumber']      = $phoneNumber;
+    $escortList[$i]['pickUpPoint']      = $pickUpPoint;
+    $escortList[$i]['status']           = $statusLabel;
+    $escortList[$i]['id']               = $id;
 }
 echo json_encode($escortList);
+// echo json_encode($numberOfResult);

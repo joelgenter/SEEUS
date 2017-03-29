@@ -37,6 +37,14 @@ function calculateDuration($startTime, $endTime) {
     return $duration;
 }
 
+$sundayDuration = calculateDuration($sundayStart, $sundayEnd);
+$mondayDuration = calculateDuration($mondayStart, $mondayEnd);
+$tuesdayDuration = calculateDuration($tuesdayStart, $tuesdayEnd);
+$wednesdayDuration = calculateDuration($wednesdayStart, $wednesdayEnd);
+$thursdayDuration = calculateDuration($thursdayStart, $thursdayEnd);
+$fridayDuration = calculateDuration($fridayStart, $fridayEnd);
+$saturdayDuration = calculateDuration($saturdayStart, $saturdayEnd);
+
 $errorMessages = Data_Validation::getErrorMessages();
 
 if (count($errorMessages) == 0) {
@@ -46,18 +54,30 @@ if (count($errorMessages) == 0) {
         'INSERT INTO hours_of_operation 
             (DayOfWeek, StartTime, Duration) 
         VALUES 
-            ("Sunday", "' . $sundayStart . '", ' . calculateDuration($sundayStart, $sundayEnd) . '),
-            ("Monday", "' . $mondayStart . '", ' . calculateDuration($mondayStart, $mondayEnd) . '),
-            ("Tuesday", "' . $tuesdayStart . '", ' . calculateDuration($tuesdayStart, $tuesdayEnd) . '),
-            ("Wednesday", "' . $wednesdayStart . '", ' . calculateDuration($wednesdayStart, $wednesdayEnd) . '),
-            ("Thursday", "' . $thursdayStart . '", ' . calculateDuration($thursdayStart, $thursdayEnd) . '),
-            ("Friday", "' . $fridayStart . '", ' . calculateDuration($fridayStart, $fridayEnd) . '),
-            ("Saturday", "' . $saturdayStart . '", ' . calculateDuration($saturdayStart, $saturdayEnd) . ')
+            ("Sunday", ?, ?),
+            ("Monday", ?, ?),
+            ("Tuesday", ?, ?),
+            ("Wednesday", ?, ?),
+            ("Thursday", ?, ?),
+            ("Friday", ?, ?),
+            ("Saturday", ?, ?)
         ON DUPLICATE KEY UPDATE StartTime = VALUES(StartTime), Duration = VALUES(Duration)';
 
-        // array_push($errorMessages, $sql);
-    
-    $sqlResult = Utility::$dbConnection->query($sql);
+    if (!$stmt = Utility::$dbConnection->prepare($sql)) {
+        array_push($errorMessages, "jklfj;lk");
+    }
+    $stmt->bind_param("sisisisisisisi", 
+        $sundayStart, $sundayDuration,
+        $mondayStart, $mondayDuration,
+        $tuesdayStart, $tuesdayDuration,
+        $wednesdayStart, $wednesdayDuration,
+        $thursdayStart, $thursdayDuration,
+        $fridayStart, $fridayDuration,
+        $saturdayStart, $saturdayDuration
+    );
+    if (!$stmt->execute()) {
+        array_push($errorMessages, "Error changing hours of operation");
+    }
 }
 
 echo json_encode($errorMessages);

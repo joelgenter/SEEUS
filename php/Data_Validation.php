@@ -17,10 +17,16 @@ class Data_Validation extends Utility{
         else if (substr($email, -10) != "@emich.edu")
             array_push(static::$errorMessages, "Email must have emich.edu domain");
         //already registered
-        elseif (static::$dbConnection->query("SELECT Email from users WHERE Email = '" . 
-                $email . "'")->num_rows > 0)
-            array_push(static::$errorMessages, " is already registered");
-            
+        else {
+            $sql = "SELECT Email from users WHERE Email = ?";
+            $stmt = static::$dbConnection->prepare($sql);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->store_result();
+            if ($stmt->num_rows > 0) {
+                array_push(static::$errorMessages, "Email is already registered");
+            }
+        } 
     }
 
     public static function checkPasswords($password, $confirmPassword) {
@@ -74,10 +80,16 @@ class Data_Validation extends Utility{
         //if not numeric
         elseif (!(is_numeric($eid)))
             array_push(static::$errorMessages, "Invalid EID");
-        elseif (static::$dbConnection->query("SELECT Email from users WHERE EID = '" .
-                $eid . "'")->num_rows > 0)
-            array_push(static::$errorMessages, "EID is already registered");
-            
+        else {
+            $sql = "SELECT Email from users WHERE EID = ?";
+            $stmt = static::$dbConnection->prepare($sql);
+            $stmt->bind_param("s", $eid);
+            $stmt->execute();
+            $stmt->store_result();
+            if ($stmt->num_rows > 0) {
+                array_push(static::$errorMessages, "EID is already registered");
+            }
+        }
     }
 
     public static function checkPhoneNumber($phoneNumber) {
@@ -121,13 +133,15 @@ class Data_Validation extends Utility{
         $sql = 
             "SELECT 1
             FROM pick_up_points, campus_locations
-            WHERE pick_up_points.Name = '$pickUpPoint'
-            AND campus_locations.Name = '$location'
+            WHERE pick_up_points.Name = ?
+            AND campus_locations.Name = ?
             AND pick_up_points.LocationID = campus_locations.ID";
-        
-        $sqlResult = static::$dbConnection->query($sql);
-        
-        if ($sqlResult->num_rows <= 0) {
+
+        $stmt = static::$dbConnection->prepare($sql);
+        $stmt->bind_param("ss", $pickUpPoint, $location);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows <= 0) {
             array_push(static::$errorMessages, "Invalid pick up point");
         }
     }
@@ -155,24 +169,26 @@ class Data_Validation extends Utility{
         $sql = 
             'SELECT 1
             FROM campus_locations
-            WHERE Name = "' . $location . '"';
-
-        $sqlResult = Utility::$dbConnection->query($sql);
-        
-        return $sqlResult->num_rows > 0;
+            WHERE Name = ?';
+        $stmt = static::$dbConnection->prepare($sql);
+        $stmt->bind_param("s", $location);
+        $stmt->execute();
+        $stmt->store_result();
+        return $stmt->num_rows > 0;
     }
 
     public static function pickUpPointExists($campusLocation, $newPickUpPoint) {
-        $sql =
+        $sql = 
             "SELECT 1
             FROM campus_locations, pick_up_points
-            WHERE campus_locations.Name = '$campusLocation'
-            AND pick_up_points.Name = '$newPickUpPoint'
+            WHERE campus_locations.Name = ?
+            AND pick_up_points.Name = ?
             AND pick_up_points.LocationID = campus_locations.ID";
-        echo $sql;
-        $sqlResult = Utility::$dbConnection->query($sql);
-        
-        return $sqlResult->num_rows > 0;
+        $stmt = static::$dbConnection->prepare($sql);
+        $stmt->bind_param("ss", $campusLocation, $newPickUpPoint);
+        $stmt->execute();
+        $stmt->store_result();
+        return $stmt->num_rows > 0;
     }
 
     public static function timeFormatCorrect($time) {
