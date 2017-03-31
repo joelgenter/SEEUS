@@ -31,7 +31,7 @@ if (count($errorMessages) == 0) {
 
     $sql = "INSERT INTO users (
                 Email, 
-                Password, 
+                PasswordHash, 
                 FirstName, 
                 LastName, 
                 VerificationCode,
@@ -41,9 +41,12 @@ if (count($errorMessages) == 0) {
             ) VALUES (?, ?, ?, ?, ?, 0, ?, ?)";
 
     $stmt = Utility::$dbConnection->prepare($sql);
+
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
     $stmt->bind_param("sssssss",
         $email,
-        $password,
+        $passwordHash,
         $firstName,
         $lastName,
         $verificationCode,
@@ -57,7 +60,7 @@ if (count($errorMessages) == 0) {
 
     $currentUser = new User($email);
 
-    // $currentUser->sendVerificationCode();            //for sending out the verification code to the email
+    $currentUser->sendVerificationCode();            //for sending out the verification code to the email
     $_SESSION['currentUser'] = serialize($currentUser);
 
 }

@@ -20,12 +20,6 @@ $fridayEnd      = Security::cleanInput($_POST['fridayEnd']);
 $saturdayStart  = Security::cleanInput($_POST['saturdayStart']);
 $saturdayEnd    = Security::cleanInput($_POST['saturdayEnd']);
 
-foreach ($_POST as $key => $value) {
-    if (!Data_Validation::timeFormatCorrect($value)) {
-        break;  //to prevent replicated errors
-    }
-}
-
 function calculateDuration($startTime, $endTime) {
     $startTime = strtotime($startTime);
     $endTime = strtotime($endTime);

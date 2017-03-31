@@ -6,10 +6,10 @@ Security::assertUserIs(['authoritarian', 'user']);
 
 Utility::connectDB();
 
-$sql = 
+$sql =
     'SELECT
         PhoneNumber
-    FROM escorts
+    FROM users
     WHERE EID = "' . $_SESSION['eid'] . '"';
 
 $sqlResult = Utility::$dbConnection->query($sql);

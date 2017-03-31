@@ -24,7 +24,7 @@
             </select><span class="error">*</span>
         </div>
         <div>
-		    &nbsp<input type="text" name="phoneNumber" placeholder="Phone Number" maxlength="10" ><span class="error">*</span>
+		    &nbsp<input type="text" name="phoneNumber" value="hil" placeholder="Phone Number" maxlength="10" ><span class="error">*</span>
         </div>
         <div>
             <input type="submit" name="submit" value="Submit">
@@ -85,7 +85,6 @@ $('form').submit(function() {
         }
     )
     .done(function(errorMessages) {
-        $response.html(errorMessages);
         errorMessages = JSON.parse(errorMessages);
         if (errorMessages.length == 0) {
             userInterface.loadContent('view_escorts');

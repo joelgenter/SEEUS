@@ -18,12 +18,11 @@ class User extends Utility {
         static::connectDB();
         $this->email = $email;
         $sql = 'SELECT
-                    Password,
+                    PasswordHash,
                     EID,
                     FirstName,
                     Verified,
                     VerificationCode,
-                    Password,
                     LastName
                 FROM users 
                 WHERE Email = ?';
@@ -33,12 +32,11 @@ class User extends Utility {
         $stmt->execute();
         $stmt->store_result();
         $stmt->bind_result(
-            $this->userInfo["Password"],
+            $this->userInfo["PasswordHash"],
             $this->userInfo["EID"],
             $this->userInfo["FirstName"],
             $this->userInfo["Verified"],
             $this->userInfo["VerificationCode"],
-            $this->userInfo["Password"],
             $this->userInfo["LastName"]
         );
         $stmt->fetch();
@@ -96,7 +94,7 @@ class User extends Utility {
 
     public function passwordCorrect($enteredPassword) {
         if ($this->userInfo != FALSE) {
-            if ($this->userInfo['Password'] == $enteredPassword) 
+            if (password_verify($enteredPassword, $this->userInfo['PasswordHash'])) 
                 return TRUE;
             else {
                 array_push(static::$errorMessages, "Incorrect password");
@@ -145,11 +143,12 @@ class User extends Utility {
 
     public function changePassword($newPassword) {
         $sql = 'UPDATE users
-                SET Password = ?
+                SET PasswordHash = ?
                 WHERE EID = ?';
 
         $stmt = static::$dbConnection->prepare($sql);
-        $stmt->bind_param("ss", $newPassword, $this->userInfo['EID']);
+        $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+        $stmt->bind_param("ss", $passwordHash, $this->userInfo['EID']);
         $stmt->execute();
     }
 

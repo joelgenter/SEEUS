@@ -88,6 +88,7 @@ $('form').submit(function() {
     //sending and receving the data
     $.post(url, dataToSend)
     .done(function(errorMessages) {
+        console.log(errorMessages);
         errorMessages = JSON.parse(errorMessages);  
             $response.empty();
         if (errorMessages.length == 0)
