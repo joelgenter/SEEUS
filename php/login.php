@@ -19,6 +19,9 @@ if ($isRegistered && $passwordCorrect) {
     if ($isVerified) {
         $currentUser->login();
     } else {
+        if (!$currentUser->sendVerificationCode()) {
+            array_push($errorMessages, "You've been registered but we could not send another verification code. Try again in 12 hours.");
+        }
         $_SESSION['currentUser'] = serialize($currentUser);
     }
 }
