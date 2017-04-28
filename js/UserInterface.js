@@ -102,19 +102,16 @@ var UserInterface = function($contentElement, $menuElement, $statusElement) {
 }
 
 UserInterface.prototype.loadContent = function(pageName) {
+    clearInterval(this.refreshTimer); //so view_escorts.html doesn't continue to make ajax calls
+    
     if (pageName in this.navigation) {
         this.$contentElement.load(this.navigation[pageName].url);
         this.$menuElement.children("li").removeAttr("class");
         this.$menuElement.find("#" + pageName).attr("class", "active");
         var _this = this;
-
-            console.log(pageName);
-            console.log("id",_this.$menuElement.find("#" + pageName).attr("id"));
-            console.log("class",_this.$menuElement.find("#" + pageName).attr("class"));
-
-        
-    } else
+    } else {
         $contentElement.html('Page not found');
+    }
 }
 
 UserInterface.prototype.getUserType = function(callback) {
