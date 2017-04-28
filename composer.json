@@ -1,0 +1,6 @@
+{
+    "name": "eastern_michigan_university/seeus",
+    "require": {
+        "phpmailer/phpmailer": "^5.2"
+    }
+}

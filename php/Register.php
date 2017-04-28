@@ -60,9 +60,11 @@ if (count($errorMessages) == 0) {
 
     $currentUser = new User($email);
 
-    $currentUser->sendVerificationCode();            //for sending out the verification code to the email
-    $_SESSION['currentUser'] = serialize($currentUser);
+    if (!$currentUser->sendVerificationCode()) {
+        array_push($errorMessages, "Registration successful. Could not send verification code. Try again in 12 hours.");
+    }
 
+    $_SESSION['currentUser'] = serialize($currentUser);
 }
 
 echo json_encode($errorMessages);

@@ -5,6 +5,7 @@ require_once 'Class_Autoloader.php';
 
 $email = Security::cleanInput($_POST['email']);
 
+$errorMessages = [];
 
 User::connectDB();
 if (User::emailRegistered($email)) {
@@ -20,10 +21,14 @@ if (User::emailRegistered($email)) {
     $stmt->execute();
 
     $currentUser = new User($email);
-    // $currentUser->sendVerificationCode();            //for sending out the verification code to the email
+
+    if (!$currentUser->sendVerificationCode()) {
+        array_push($errorMessages, "Could not send email. Try again in 12 hours.");
+    }
+
     $_SESSION['currentUser'] = serialize($currentUser);
 }
 
-$errorMessages = User::getErrorMessages();
+$errorMessages = array_merge($errorMessages, User::getErrorMessages());
 
 echo json_encode($errorMessages);

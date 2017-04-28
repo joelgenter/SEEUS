@@ -123,12 +123,32 @@ class User extends Utility {
         $_SESSION['firstName'] = $this->userInfo['FirstName'];
     }
 
+    //return true if successful or false if failed
     public function sendVerificationCode() {
-        mail(
-            $this->email,                         //recipient
-            "SEEUS Verification Code",      //subject
-            "Hello,\n\nYour verification code is: " . $this->userInfo['VerificationCode'] //message
-        );
+        require_once "../vendor/autoload.php";
+
+        //PHPMailer Object
+        $mail = new PHPMailer;
+
+        //From email address
+        $mail->From = "noreply@seeus.com";
+        $mail->FromName = "SEEUS EMU";
+
+        //To address
+        $mail->addAddress($this->email);
+
+        //Send HTML or Plain Text email
+        $mail->isHTML(true);
+
+        $mail->Subject = "SEEUS Verification Code";
+        $mail->Body = "<h1>SEEUS</h1><p>Here is your verification code: <strong>" . $this->userInfo['VerificationCode'] . "</strong>";
+        $mail->AltBody = "This is the plain text version of the email content";
+
+        if ($mail->send()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function verifyEmail() {

@@ -106,6 +106,7 @@ UserInterface.prototype.loadContent = function(pageName) {
         this.$contentElement.load(this.navigation[pageName].url);
         this.$menuElement.children("li").removeAttr("class");
         this.$menuElement.find("#" + pageName).attr("class", "active");
+        console.log(this.$menuElement.find("#" + pageName).attr("class", "active"));
     } else
         $contentElement.html('Page not found');
 }
