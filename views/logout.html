@@ -1,7 +1,8 @@
 <script>
 $.post('php/Logout.php')
 .done(function() {
-    userInterface.refreshMenu();
-    userInterface.loadContent('login');
+    userInterface.refreshMenu(function() {
+        userInterface.loadContent('login');
+    });
 });
 </script>

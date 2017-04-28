@@ -106,7 +106,13 @@ UserInterface.prototype.loadContent = function(pageName) {
         this.$contentElement.load(this.navigation[pageName].url);
         this.$menuElement.children("li").removeAttr("class");
         this.$menuElement.find("#" + pageName).attr("class", "active");
-        console.log(this.$menuElement.find("#" + pageName).attr("class", "active"));
+        var _this = this;
+
+            console.log(pageName);
+            console.log("id",_this.$menuElement.find("#" + pageName).attr("id"));
+            console.log("class",_this.$menuElement.find("#" + pageName).attr("class"));
+
+        
     } else
         $contentElement.html('Page not found');
 }
@@ -137,7 +143,7 @@ UserInterface.prototype.getLocationsDestinations = function(callback) {
     })
 }
 
-UserInterface.prototype.refreshMenu = function() {
+UserInterface.prototype.refreshMenu = function(callback) {
     this.$menuElement.empty();
     var prototype = this;
     this.getUserType(function(userType) {
@@ -150,11 +156,14 @@ UserInterface.prototype.refreshMenu = function() {
                 (function(pageName) {
                     $newElement = $('<li id="' + pageName + '">' + prototype.navigation[pageName]['displayName'] + '</li>');
                     $newElement.on('click', function() {
-                        prototype.loadContent(pageName)
+                        prototype.loadContent(pageName);
                     });
                     prototype.$menuElement.append($newElement);  //improve performance by moving the final append outside of loop
                 })(pageName);
             }
+        }
+        if (typeof callback === "function") {
+            callback();
         }
     })
 }
