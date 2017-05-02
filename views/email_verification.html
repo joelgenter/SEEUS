@@ -7,13 +7,17 @@
 	<form>
 		&nbsp<input type="text" name="verificationCode" placeholder="Verification Code">
 		<input type="submit" value="Verify">
-		<input type="submit" value="Send Code Again">
+        <button id="sendAgain">Send Code Again</button>
 	</form>
 </div>
 
 <script>
 var $verificationCodeField = $('input[name="verificationCode"]'),
     $response = $('#response');
+
+$('#sendAgain').click(function() {
+    //continue here
+});
 
 $('form').submit(function() {
     $.post('php/Email_Verification/Check_Code.php', 
